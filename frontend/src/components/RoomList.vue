@@ -1,6 +1,12 @@
 <template>
 <div class="sideBar" :class="{ 'sideBar-hidden': isHidden }">
     <button class="toggle-button" @click="toggleSidebar">{{ isHidden ? '>>' : '<<' }}</button>
+    <div class="rooms">
+        <h2>Conversations</h2>
+        <div class="room" v-for="room in rooms" :key="room.id">
+            <User :room="room" />
+        </div>
+    </div>
 </div>
  
 </template>
@@ -34,5 +40,22 @@ export default {
 .toggle-button {
     align-self: flex-end;
     margin-right: -35px;
+}
+
+.rooms {
+    margin-top: -35px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.room {
+    background: #AFAFAF;
+    border: 1px solid black;
+    margin-left: 2px;
+    margin-top: 10px;
+    width: 98%;
+    height: 60px;
+    border-radius: 10px;
+    transition: transform 0.1s ease;
 }
 </style>

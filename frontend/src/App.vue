@@ -1,7 +1,7 @@
 <template>
   some text
   <RoomList />
-  <PeopleList />
+  <PeopleList :users='users' />
 </template>
 
 <script>
@@ -9,22 +9,38 @@ import { ref } from 'vue'
 import RoomList from './components/RoomList.vue'
 import PeopleList from './components/PeopleList.vue'
 
+
 export default {
   name: 'App',
   components: { RoomList, PeopleList },
   setup() {
-
+    const users = ref([
+      { name: "first", id: 1 },
+      { name: "second", id: 2 },
+      { name: "third", id: 3 },
+      { name: "first", id: 4 },
+      { name: "second", id: 5 },
+      { name: "third", id: 6 },
+      { name: "first", id: 7 },
+      { name: "second", id: 8 },
+      { name: "third", id: 9 }
+    ])
     return {
-
+      users
     }
   },
 }
 </script>
 
 <style>
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
 body {
   background: #DDD0C8;
-  color: #333333;
+  color: #242424;
   min-width: 750px;
 }
 
@@ -46,6 +62,7 @@ body {
     width: 250px;
     padding: 20px;
     transition: transform 0.3s ease;
+
 }
 
 button {
@@ -62,4 +79,7 @@ button:hover {
   color: #DDD0C8;
 }
 
+h2 {
+  color: #DDD0C8;
+}
 </style>
