@@ -26,8 +26,9 @@ img {
     border: 1px solid black;
     margin-top: -35px;
     padding-top: 10px;
+    padding-bottom: 10px;
     width: 100%;
-    height: 150px;
+    height: 130px;
     border-radius: 10px;
 }
 

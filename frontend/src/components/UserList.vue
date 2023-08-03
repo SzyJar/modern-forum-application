@@ -13,8 +13,8 @@
 
 <script>
 import { ref } from 'vue'
-import CurrentUser from '../components/CurrentUser.vue'
-import User from '../components/User.vue'
+import CurrentUser from './CurrentUser.vue'
+import User from './User.vue'
 
 export default {
     props: ['users'],
@@ -38,7 +38,7 @@ export default {
 }
 
 .sideBar-hidden {
-  transform: translateX(250px);
+  transform: translateX(260px);
 }
 
 .toggle-button {

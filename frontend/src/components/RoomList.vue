@@ -4,7 +4,7 @@
     <div class="rooms">
         <h2>Conversations</h2>
         <div class="room" v-for="room in rooms" :key="room.id">
-            <User :room="room" />
+            <Room :room="room" />
         </div>
     </div>
 </div>
@@ -13,8 +13,11 @@
 
 <script>
 import { ref } from 'vue'
+import Room from './Room.vue'
 
 export default {
+  props: ['rooms'],
+  components: { Room },
   setup() {
     const isHidden = ref(false);
 
@@ -34,7 +37,7 @@ export default {
 }
 
 .sideBar-hidden {
-  transform: translateX(-250px);
+  transform: translateX(-260px);
 }
 
 .toggle-button {
@@ -57,5 +60,12 @@ export default {
     height: 60px;
     border-radius: 10px;
     transition: transform 0.1s ease;
+}
+
+.room:hover{
+    background: #404040;
+    color: #DDD0C8;
+    transform: translate(-2px, -2px);
+    cursor: pointer;
 }
 </style>

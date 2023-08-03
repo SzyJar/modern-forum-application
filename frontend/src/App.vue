@@ -1,13 +1,13 @@
 <template>
   some text
-  <RoomList />
+  <RoomList :rooms='rooms' />
   <PeopleList :users='users' />
 </template>
 
 <script>
 import { ref } from 'vue'
 import RoomList from './components/RoomList.vue'
-import PeopleList from './components/PeopleList.vue'
+import PeopleList from './components/UserList.vue'
 
 
 export default {
@@ -24,9 +24,21 @@ export default {
       { name: "first", id: 7 },
       { name: "second", id: 8 },
       { name: "third", id: 9 }
-    ])
+    ]);
+    const rooms = ref([
+      { name: "first", id: 1 },
+      { name: "second", id: 2 },
+      { name: "third", id: 3 },
+      { name: "first", id: 4 },
+      { name: "second", id: 5 },
+      { name: "third", id: 6 },
+      { name: "first", id: 7 },
+      { name: "second", id: 8 },
+      { name: "third", id: 9 }
+    ]);
     return {
-      users
+      users,
+      rooms
     }
   },
 }
@@ -42,6 +54,7 @@ body {
   background: #DDD0C8;
   color: #242424;
   min-width: 750px;
+  min-height: 400px;
 }
 
 #app {
