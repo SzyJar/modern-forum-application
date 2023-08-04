@@ -65,6 +65,12 @@ module.exports = function (app) {
         };
     });
 
+    app.route('/logout')
+    .post(function(req, res) {
+        req.session.userId = null;
+        res.json({ message: 'Logged out successfully' });
+      });
+    
     app.route('/:chatid')
     .get(auth, function(req, res) {
         const id = req.params.chatid;
