@@ -1,5 +1,7 @@
 require('dotenv').config();
 const express = require('express');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -21,6 +23,17 @@ app.use(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use(
+    session({
+        secret: process.env.SECURITY_KEY,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: false },
+    })
+);
 
 // Routing
 apiRoutes(app);

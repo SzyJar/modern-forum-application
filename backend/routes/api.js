@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const chatSchema = require('../models/chat');
-const userSchema = require('../models/user');
+
+const Chat = require('../models/chat');
+const User = require('../models/user');
+const auth = require('../controllers/auth');
 
 
 mongoose.connect(process.env.MONGO_URI, {
@@ -19,25 +21,52 @@ module.exports = function (app) {
     });
 
     app.route('/signup')
-    .post(function(req, res) {
+    .post(async function(req, res) {
         const name = req.body.name;
         const password = req.body.password;
         const newuser = req.body.newuser;
         const saltRounds = 12;
 
-        bcrypt.hash(password, saltRounds, (err, hash) => {
-            console.log(hash);
-            res.end(hash);
-        });
+        const user = await User.findOne({ name: name });
 
         if(newuser) {
-            // create new sue
+            const hash = await bcrypt.hash(password, saltRounds);
+            try {
+                if (user) {
+                    return res.status(409).json({ error: 'user exists' });
+                } else {
+                    const newUser = new User({
+                        name: name,
+                        password: hash,
+                    });
+                    await newUser.save();
+                    return res.status(201).end('created');
+                };
+            } catch (err) {
+                console.error('Error occurred in POST request to /signup', err.message);
+                res.status(500).json({ error: 'An error occurred while creating new user.' });
+            };
+        } else {
+            try {
+                if (user) {
+                    const isValidPassword = await bcrypt.compareSync(password, user.password);
+                    if(isValidPassword) {
+                        req.session.userId = user._id;
+                        return res.status(200).end('success');
+                    };
+                    return res.status(401).json({ error: 'incorrect password' });
+                } else {
+                    return res.status(401).json({ error: 'user not exist' });
+                };
+            } catch (err) {
+                console.error('Error occurred in POST request to /signup', err.message);
+                res.status(500).json({ error: 'An error occurred while creating new user.' });
+            };
         };
-        
     });
 
     app.route('/:chatid')
-    .get(function(req, res) {
+    .get(auth, function(req, res) {
         const id = req.params.chatid;
         res.end(id);
     });
