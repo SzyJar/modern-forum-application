@@ -44,6 +44,7 @@ module.exports = function (app) {
                         password: hash,
                     });
                     await newUser.save();
+                    req.session.userId = newUser._id;
                     return res.status(201).end('created');
                 };
             } catch (err) {
