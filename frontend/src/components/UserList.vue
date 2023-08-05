@@ -76,5 +76,6 @@ export default {
     background: #404040;
     color: #DDD0C8;
     transform: translate(-2px, -2px);
+    cursor: pointer;
 }
 </style>

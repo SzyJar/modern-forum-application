@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue';
-import axios from 'axios';
+import { ref, computed } from 'vue'
+import axios from 'axios'
 
 export default {
     emits: ['success'],

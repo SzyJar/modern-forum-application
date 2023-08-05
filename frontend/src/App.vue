@@ -3,7 +3,7 @@
     <SignIn @success="loggedIn" />
   </div>
   <div v-else>
-    <RoomList :rooms="rooms" />
+    <RoomList />
     <UserList :users="users" :currentUser="currentUser" @logOut="logOut" />
   </div>
 </template>
@@ -51,20 +51,9 @@ export default {
       { name: "second", id: 8 },
       { name: "third", id: 9 }
     ]);
-    const rooms = ref([
-      { name: "first", id: 1 },
-      { name: "second", id: 2 },
-      { name: "third", id: 3 },
-      { name: "first", id: 4 },
-      { name: "second", id: 5 },
-      { name: "third", id: 6 },
-      { name: "first", id: 7 },
-      { name: "second", id: 8 },
-      { name: "third", id: 9 }
-    ]);
+    
     return {
       users,
-      rooms,
       isLoggedIn,
       currentUser,
       // functions

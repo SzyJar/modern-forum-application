@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="avatar">
-            <img src='../assets/images/profile1.png'/>
+            <img :src="require('../assets/images/icon' + room.icon +'.png')">
         </div>
         <div class="name">{{ room.name }}</div>
     </div>

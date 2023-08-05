@@ -6,6 +6,9 @@
         <div class="room" v-for="room in rooms" :key="room.id">
             <Room :room="room" />
         </div>
+        <div class='room'>
+          <Room :room="{ name: 'Create new room', icon: 'new' }" />
+        </div>
     </div>
 </div>
  
@@ -13,19 +16,37 @@
 
 <script>
 import { ref } from 'vue'
+import axios from 'axios'
+axios.defaults.withCredentials = true;
+
 import Room from './Room.vue'
 
 export default {
-  props: ['rooms'],
   components: { Room },
   setup() {
     const isHidden = ref(false);
+    const rooms = ref(null);
+
+    const getRooms = async () => {
+        try {
+          const response = await axios.get(process.env.VUE_APP_API_URL + 'chat');
+          rooms.value = response.data;
+        } catch (error) {
+          console.log(error.message);
+        };
+    };
 
     const toggleSidebar = () => {
       isHidden.value = !isHidden.value;
     };
 
-    return { isHidden, toggleSidebar };
+  getRooms();
+    return {
+      isHidden,
+      rooms,
+      toggleSidebar,
+      getRooms
+    };
   },
 }
 </script>
