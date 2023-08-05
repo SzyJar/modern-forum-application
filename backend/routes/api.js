@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const Chat = require('../models/chat');
 const User = require('../models/user');
+const Chat = require('../models/chat');
 const auth = require('../controllers/auth');
 
 
@@ -90,14 +90,15 @@ module.exports = function (app) {
 
         try {
             const chat = await Chat.findOne({ name: name });
-
+            
             if(!chat) {
                 return res.status(401).end('Chat does not exist');
             };
-    
+            
             if (chat.users.length === 0 || chat.users.includes(req.session.userId)) {
+                const user = await User.findById(req.session.userId);
                 const newChatMessage = {
-                    sender: req.session.userId,
+                    sender: user.name,
                     content: content,
                     timestamp: new Date(),
                   };
@@ -141,7 +142,7 @@ module.exports = function (app) {
     .get(auth, async function(req, res) {
         const name = req.params.chatname;
         try {
-            const chat = await Chat.findOne({ name: name });
+            const chat = await Chat.findOne({ name: name })
 
             if(!chat) {
                 return res.status(401).end('Chat does not exist');

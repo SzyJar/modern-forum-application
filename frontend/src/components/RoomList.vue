@@ -3,7 +3,7 @@
     <button class="toggle-button" @click="toggleSidebar">{{ isHidden ? '>>' : '<<' }}</button>
     <div class="rooms">
         <h2>Conversations</h2>
-        <div class="room" v-for="room in rooms" :key="room.id">
+        <div class="room" v-for="room in rooms" :key="room.id" @click="roomChange(room.name)">
             <Room :room="room" />
         </div>
         <div class='room'>
@@ -23,7 +23,7 @@ import Room from './Room.vue'
 
 export default {
   components: { Room },
-  setup() {
+  setup(props, { emit }) {
     const isHidden = ref(false);
     const rooms = ref(null);
 
@@ -39,13 +39,18 @@ export default {
     const toggleSidebar = () => {
       isHidden.value = !isHidden.value;
     };
+    const roomChange = (name) => {
+      emit('roomChange', name);
+    };
 
-  getRooms();
+    getRooms();
     return {
       isHidden,
       rooms,
+      // functions
       toggleSidebar,
-      getRooms
+      getRooms,
+      roomChange
     };
   },
 }
