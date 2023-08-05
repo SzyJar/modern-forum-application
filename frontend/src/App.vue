@@ -3,8 +3,8 @@
     <SignIn @success="loggedIn" />
   </div>
   <div v-else>
+    <Chat :chatName="chatName" :chatData="chatData" @sendMessage="sendMessage"/>
     <RoomList @roomChange="roomChange" />
-    <Chat :chatName="chatName" :chatData="chatData" />
     <UserList :users="users" :currentUser="currentUser" @logOut="logOut" />
   </div>
 </template>
@@ -54,7 +54,14 @@ export default {
         const response = await axios.get(process.env.VUE_APP_API_URL + 'chat/' + data);
         chatData.value = response.data;
         chatName.value = data;
-        console.log(chatData)
+      } catch (error) {
+          console.log(error);
+      };
+    };
+
+    const sendMessage = async (data) => {
+      try {
+        const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chatName.value, { content: data });
       } catch (error) {
           console.log(error);
       };
@@ -81,7 +88,8 @@ export default {
       // functions
       loggedIn,
       logOut,
-      roomChange
+      roomChange,
+      sendMessage
     }
   },
 }
