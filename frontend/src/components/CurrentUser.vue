@@ -1,16 +1,26 @@
 <template>
   <div class="currentUser">
-    <img src='../assets/images/profile1.png'/><br>
-    Loged in as: NAME <br>
-    Curent room: room name
-    <button class="logout">LOG OUT</button>
+    <img :src="require('../assets/images/profile' + currentUser.avatar + '.png')">
+    <p>Loged in as: {{ currentUser.name }}</p>
+    <p v-if="roomName">Current chat: {{ roomName }}</p>
+    <p v-else>Not in conversation</p>
+    <button @click="logOut" class="logout">LOG OUT</button>
   </div>
 </template>
 
 <script>
 export default {
-
-}
+    props: ['currentUser'],
+    emits: ['logOut'],
+    setup(props, { emit }) {
+        const logOut = () => {
+            emit('logOut');
+        };
+        return {
+            logOut,
+        };
+    }
+};
 </script>
 
 <style scoped>
@@ -28,8 +38,13 @@ img {
     padding-top: 10px;
     padding-bottom: 10px;
     width: 100%;
-    height: 130px;
+    height: 150px;
     border-radius: 10px;
+    font-weight: 600;
+}
+
+p {
+    margin: 8px;
 }
 
 .user {

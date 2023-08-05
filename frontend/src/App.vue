@@ -1,24 +1,45 @@
 <template>
-  <div v-if="!loggedIn">
-    <SignIn />
+  <div v-if="!isLoggedIn">
+    <SignIn @success="loggedIn" />
   </div>
   <div v-else>
     <RoomList :rooms="rooms" />
-    <PeopleList :users="users" />
+    <UserList :users="users" :currentUser="currentUser" @logOut="logOut" />
   </div>
 </template>
 
 <script>
 import { ref } from 'vue'
+import axios from 'axios'
 import RoomList from './components/RoomList.vue'
-import PeopleList from './components/UserList.vue'
+import UserList from './components/UserList.vue'
 import SignIn from './components/SignIn.vue'
 
 export default {
   name: 'App',
-  components: { RoomList, PeopleList, SignIn },
+  components: { RoomList, UserList, SignIn },
   setup() {
-    const loggedIn = ref(false);
+    const isLoggedIn = ref(false);
+    const currentUser = ref({
+      name: null,
+      avatar: 1,
+    })
+
+    const loggedIn = (data) => {
+      currentUser.value.name = data.name;
+      currentUser.value.avatar = data.avatar;
+      isLoggedIn.value = true;
+    };
+
+    const logOut = async () => {
+      try {
+          const response = await axios.post(process.env.VUE_APP_API_URL + 'logout');
+          isLoggedIn.value = false;
+      } catch (error) {
+          console.log(error);
+      };
+    };
+
     const users = ref([
       { name: "first", id: 1 },
       { name: "second", id: 2 },
@@ -44,7 +65,11 @@ export default {
     return {
       users,
       rooms,
-      loggedIn
+      isLoggedIn,
+      currentUser,
+      // functions
+      loggedIn,
+      logOut
     }
   },
 }

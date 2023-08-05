@@ -36,7 +36,7 @@ module.exports = function (app) {
             const hash = await bcrypt.hash(password, saltRounds);
             try {
                 if (user) {
-                    return res.status(409).json({ error: 'user exists' });
+                    return res.status(409).end('User already exists');
                 } else {
                     const newUser = new User({
                         name: name,
@@ -45,7 +45,7 @@ module.exports = function (app) {
                     });
                     await newUser.save();
                     req.session.userId = newUser._id;
-                    return res.status(201).end('created');
+                    return res.status(201).json({ name: newUser.name, avatar: newUser.avatar });
                 };
             } catch (err) {
                 console.error('Error occurred in POST request to /signup', err.message);
@@ -57,15 +57,15 @@ module.exports = function (app) {
                     const isValidPassword = await bcrypt.compareSync(password, user.password);
                     if(isValidPassword) {
                         req.session.userId = user._id;
-                        return res.status(200).end('success');
+                        return res.status(200).json({ name: user.name, avatar: user.avatar });
                     };
-                    return res.status(401).json({ error: 'incorrect password' });
+                    return res.status(401).end('Incorrect password');
                 } else {
-                    return res.status(401).json({ error: 'user does not exist' });
+                    return res.status(401).end('User does not exist');
                 };
             } catch (err) {
                 console.error('Error occurred in POST request to /signup', err.message);
-                res.status(500).json({ error: 'An error occurred while creating new user.' });
+                res.status(500).end('An error occurred while creating new user');
             };
         };
     });
@@ -73,8 +73,13 @@ module.exports = function (app) {
     app.route('/logout')
     // Log out
     .post(function(req, res) {
-        req.session.userId = null;
-        res.json({ message: 'Logged out successfully' });
+        req.session.destroy((err) => {
+            if (err) {
+                console.error('Error while destroying session:', err);
+                return res.status(500).end('Failed to logout');
+            };
+            return res.status(200).end('Logged out successfully');
+        });
     });
 
     app.route('/message/:chatname')
@@ -87,7 +92,7 @@ module.exports = function (app) {
             const chat = await Chat.findOne({ name: name });
 
             if(!chat) {
-                return res.status(401).json({ error: 'chat does not exist' });
+                return res.status(401).end('Chat does not exist');
             };
     
             if (chat.users.length === 0 || chat.users.includes(req.session.userId)) {
@@ -103,11 +108,11 @@ module.exports = function (app) {
                   return res.status(201).json(newChatMessage);
             } else {
                 // Client is trying to access other's private chat
-                return res.status(401).json({ error: 'chat does not exist' });
+                return res.status(401).end('Chat does not exist');
             };
         } catch(err) {
             console.error('Error occurred in POST request to /message/:chatname', err.message);
-            res.status(500).json({ error: 'An error occurred while creating new message.' });
+            res.status(500).end('An error occurred while creating new message');
         };
     });
 
@@ -127,7 +132,7 @@ module.exports = function (app) {
             return res.json(nameList);
         } catch(err) {
             console.error('Error occurred in GET request to /chat', err.message);
-            res.status(500).json({ error: 'An error occurred while retrieving chat rooms.' });
+            res.status(500).end('An error occurred while retrieving chat rooms');
         };
     });
 
@@ -139,17 +144,17 @@ module.exports = function (app) {
             const chat = await Chat.findOne({ name: name });
 
             if(!chat) {
-                return res.status(401).json({ error: 'chat does not exist' });
+                return res.status(401).end('Chat does not exist');
             };
 
             if(chat.users.length === 0 || chat.users.includes(req.session.userId)) {
                 return res.json(chat.messages);
             };
             // Client is trying to access other's private chat
-            return res.status(401).json({ error: 'chat does not exist' });
+            return res.status(401).end('Chat does not exist');
         } catch(err) {
             console.error('Error occurred in GET request to /chat/:chatname', err.message);
-            res.status(500).json({ error: 'An error occurred while retrieving messages.' });
+            res.status(500).end('An error occurred while retrieving messages');
         };
     })
     // Create new chat
@@ -183,7 +188,7 @@ module.exports = function (app) {
             res.status(301).json({ error: 'chat already exist' });
         } catch(err) {
             console.error('Error occurred in POST request to /chat/:chatname', err.message);
-            res.status(500).json({ error: 'An error occurred while creating new chat.' });
+            res.status(500).end('An error occurred while creating new chat');
         };
     });
 

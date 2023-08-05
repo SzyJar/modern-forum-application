@@ -1,6 +1,7 @@
 <template>
     <form @submit.prevent="handleSubmit">
         <h2>Please register to access the forum</h2>
+
         <label>Name:</label>
         <input type="text" v-model="userData.name" required>
 
@@ -26,18 +27,20 @@
         </div>
 
         <div class="submit">
-        <button>{{ buttonText.submit }}</button>
+            <button>{{ buttonText.submit }}</button>
         </div>
+        <div v-if="loginError" class="error">{{ loginError }}</div>
         </form>
     <button @click='changeScreen'>{{ buttonText.change }}</button>
 </template>
 
 <script>
 import { ref, computed } from 'vue';
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
-    setup(){
+    emits: ['success'],
+    setup(props, { emit }){
         const userData = ref({
             name: '',
             avatar: 1,
@@ -53,6 +56,7 @@ export default {
         ];
         const password2 = ref('');
         const passwordError = ref(null);
+        const loginError = ref(null);
         const registerScreen = ref(false);
         const buttonText = ref({
             submit: 'Log in',
@@ -63,6 +67,7 @@ export default {
         const isSelectedAvatar = computed(() => (imageId) => {
             return userData.value.avatar === imageId;
         });
+        
         // Switch between login and register screens
         const changeScreen = () => {
             userData.value = {
@@ -72,6 +77,8 @@ export default {
             };
             password2.value = '';
             registerScreen.value = !registerScreen.value;
+            passwordError.value = '';
+            loginError.value = '';
             if (!registerScreen.value) {
                 buttonText.value.change = 'Register new account instead';
                 buttonText.value.submit = 'Log in';
@@ -88,9 +95,13 @@ export default {
         const signupUser = async () => {
             try {
                 const response = await axios.post(process.env.VUE_APP_API_URL + 'signup', userData.value);
-                console.log('Signup response:', response.data);
+                emit('success', response.data);
             } catch (error) {
-                console.log('Error signing up:', error);
+                if (error.request) {
+                    loginError.value = error.request.responseText;
+                } else {
+                    loginError.value = 'An error has occurred';
+                };
             };
         };
 
@@ -112,6 +123,7 @@ export default {
             userData,
             password2,
             passwordError,
+            loginError,
             registerScreen,
             buttonText,
             // functions
@@ -158,7 +170,7 @@ button {
     border-radius: 20px;
 }
 .error {
-    color: #DDD0C8;
+    color: #FFADAD;
     margin-top: 10px;
     font-size: 0.8em;
     font-weight: bold;
