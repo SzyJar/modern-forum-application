@@ -108,6 +108,25 @@ module.exports = function (app) {
         };
     });
 
+    app.route('/chat')
+    // Get all chat rooms
+    .get(auth, async function(req, res) {
+        try {
+            const nameList = [];
+            const allChats = await Chat.find({});
+            for (const chat of allChats) {
+                nameList.push({
+                    name: chat.name,
+                });
+            };
+
+            return res.json(nameList);
+        } catch(err) {
+            console.error('Error occurred in GET request to /chat', err.message);
+            res.status(500).json({ error: 'An error occurred while retrieving chat rooms.' });
+        };
+    });
+
     app.route('/chat/:chatname')
     // Get all messages from existing chat
     .get(auth, async function(req, res) {
