@@ -1,19 +1,24 @@
 <template>
-  some text
-  <RoomList :rooms='rooms' />
-  <PeopleList :users='users' />
+  <div v-if="!loggedIn">
+    <SignIn />
+  </div>
+  <div v-else>
+    <RoomList :rooms="rooms" />
+    <PeopleList :users="users" />
+  </div>
 </template>
 
 <script>
 import { ref } from 'vue'
 import RoomList from './components/RoomList.vue'
 import PeopleList from './components/UserList.vue'
-
+import SignIn from './components/SignIn.vue'
 
 export default {
   name: 'App',
-  components: { RoomList, PeopleList },
+  components: { RoomList, PeopleList, SignIn },
   setup() {
+    const loggedIn = ref(false);
     const users = ref([
       { name: "first", id: 1 },
       { name: "second", id: 2 },
@@ -38,7 +43,8 @@ export default {
     ]);
     return {
       users,
-      rooms
+      rooms,
+      loggedIn
     }
   },
 }
