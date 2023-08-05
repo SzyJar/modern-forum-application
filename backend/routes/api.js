@@ -16,11 +16,13 @@ mongoose.connect(process.env.MONGO_URI, {
 module.exports = function (app) {
 
     app.route('/')
+    // Confirm server status
     .get(function(req, res) {
-        res.end("test response");
+        res.status(200).end('server is up');
     });
 
     app.route('/signup')
+    // Sign up or log in
     .post(async function(req, res) {
         const name = req.body.name;
         const password = req.body.password;
@@ -56,7 +58,7 @@ module.exports = function (app) {
                     };
                     return res.status(401).json({ error: 'incorrect password' });
                 } else {
-                    return res.status(401).json({ error: 'user not exist' });
+                    return res.status(401).json({ error: 'user does not exist' });
                 };
             } catch (err) {
                 console.error('Error occurred in POST request to /signup', err.message);
@@ -66,15 +68,98 @@ module.exports = function (app) {
     });
 
     app.route('/logout')
+    // Log out
     .post(function(req, res) {
         req.session.userId = null;
         res.json({ message: 'Logged out successfully' });
-      });
+    });
+
+    app.route('/message/:chatname')
+    // Create a new message in existing chat
+    .post(auth, async function(req, res) {
+        const name = req.params.chatname;
+        const content = req.body.content;
+
+        try {
+            const chat = await Chat.findOne({ name: name });
+
+            if(!chat) {
+                return res.status(401).json({ error: 'chat does not exist' });
+            };
     
-    app.route('/:chatid')
-    .get(auth, function(req, res) {
-        const id = req.params.chatid;
-        res.end(id);
+            if (chat.users.length === 0 || chat.users.includes(req.session.userId)) {
+                const newChatMessage = {
+                    sender: req.session.userId,
+                    content: content,
+                    timestamp: new Date(),
+                  };
+    
+                  chat.messages.push(newChatMessage);
+                  await chat.save();
+
+                  return res.status(201).json(newChatMessage);
+            } else {
+                // Client is trying to access other's private chat
+                return res.status(401).json({ error: 'chat does not exist' });
+            };
+        } catch(err) {
+            console.error('Error occurred in POST request to /message/:chatname', err.message);
+            res.status(500).json({ error: 'An error occurred while creating new message.' });
+        };
+    });
+
+    app.route('/chat/:chatname')
+    // Get all messages from existing chat
+    .get(auth, async function(req, res) {
+        const name = req.params.chatname;
+        try {
+            const chat = await Chat.findOne({ name: name });
+
+            if(!chat) {
+                return res.status(401).json({ error: 'chat does not exist' });
+            };
+
+            if(chat.users.length === 0 || chat.users.includes(req.session.userId)) {
+                return res.json(chat.messages);
+            };
+            // Client is trying to access other's private chat
+            return res.status(401).json({ error: 'chat does not exist' });
+        } catch(err) {
+            console.error('Error occurred in GET request to /chat/:chatname', err.message);
+            res.status(500).json({ error: 'An error occurred while retrieving messages.' });
+        };
+    })
+    // Create new chat
+    .post(auth, async function(req, res) {
+        const name = req.params.chatname;
+        const isPrivate = req.body.isPrivate;
+        const users = req.body.users;
+
+        try {
+            const chat = await Chat.findOne({ name: name });
+            const userIds = []
+    
+            if(isPrivate) {
+                for (const user of users) {
+                    const userPromise = await User.findOne({ name: user });
+                    userIds.push(userPromise._id);
+                };
+            };
+    
+            if(!chat) {
+                const newChat = new Chat({
+                    name: name,
+                    users: userIds,
+                });
+                await newChat.save();
+                return res.status(201).end('created');
+            };
+    
+            res.status(301).json({ error: 'chat already exist' });
+        } catch(err) {
+            console.error('Error occurred in POST request to /chat/:chatname', err.message);
+            res.status(500).json({ error: 'An error occurred while creating new chat.' });
+        };
     });
 
 };
