@@ -25,6 +25,7 @@ module.exports = function (app) {
     // Sign up or log in
     .post(async function(req, res) {
         const name = req.body.name;
+        const avatar = req.body.avatar;
         const password = req.body.password;
         const newuser = req.body.newuser;
         const saltRounds = 12;
@@ -39,6 +40,7 @@ module.exports = function (app) {
                 } else {
                     const newUser = new User({
                         name: name,
+                        avatar: avatar,
                         password: hash,
                     });
                     await newUser.save();
@@ -117,6 +119,7 @@ module.exports = function (app) {
             for (const chat of allChats) {
                 nameList.push({
                     name: chat.name,
+                    icon: chat.icon,
                 });
             };
 
@@ -151,6 +154,7 @@ module.exports = function (app) {
     // Create new chat
     .post(auth, async function(req, res) {
         const name = req.params.chatname;
+        const icon = req.body.icon;
         const isPrivate = req.body.isPrivate;
         const users = req.body.users;
 
@@ -168,6 +172,7 @@ module.exports = function (app) {
             if(!chat) {
                 const newChat = new Chat({
                     name: name,
+                    icon: icon,
                     users: userIds,
                 });
                 await newChat.save();

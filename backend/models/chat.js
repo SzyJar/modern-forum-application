@@ -23,6 +23,10 @@ const chatSchema = new Schema({
         required: true,
         unique: true,
     },
+    icon: {
+      type: Number,
+      requierd: true,
+    },
     users: [
         {
           type: mongoose.Schema.Types.ObjectId,
