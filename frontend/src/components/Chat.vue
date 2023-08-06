@@ -84,6 +84,7 @@ button {
     position: fixed;
     top: 0;
     width: 100%;
+    font-size: 120%;
 }
 
 .send-container {
@@ -119,7 +120,7 @@ textarea {
     margin-top: 45px;
     margin-bottom: 80px;
     height: 100%;
-    color: #DDD0C8;
+    color: white;
     overflow-wrap: break-word;
     overflow-y: auto;
 }
@@ -134,8 +135,9 @@ textarea {
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
+    color: #DDD0C8;
 }
 
 .sender {

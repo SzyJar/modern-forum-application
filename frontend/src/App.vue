@@ -4,9 +4,9 @@
     <SignIn @success="loggedIn" />
   </div>
   <div v-else>
-    <Chat :chatName="chatName" :chatData="chatData" :currentUser="currentUser" @sendMessage="sendMessage"/>
+    <Chat :chatName="chat.name" :chatData="chat.data" :currentUser="currentUser" @sendMessage="sendMessage"/>
     <RoomList :rooms="rooms" @roomChange="roomChange" @createNewRoom="createNewRoom" @getRooms="getRooms" />
-    <UserList :users="users" :currentUser="currentUser" :chatName="chatName" @logOut="logOut" />
+    <UserList :users="users" :currentUser="currentUser" :chatName="chat.name" @logOut="logOut" />
   </div>
   <div v-if="showCreateWindow"><CreateRoom @done="createNewRoom" /></div>
 </div>
@@ -34,8 +34,10 @@ export default {
 
     const showCreateWindow = ref(false);
 
-    const chatData = ref(null);
-    const chatName = ref('');
+    const chat = ref({
+      data: null,
+      name: '',
+    });
 
     const rooms = ref(null);
 
@@ -60,8 +62,8 @@ export default {
     const roomChange = async (data) => {
       try {
         const response = await axios.get(process.env.VUE_APP_API_URL + 'chat/' + data);
-        chatData.value = response.data;
-        chatName.value = data;
+        chat.value.data = response.data;
+        chat.value.name = data;
       } catch (error) {
           console.log(error);
       };
@@ -70,7 +72,7 @@ export default {
     // Send new message
     const sendMessage = async (data) => {
       try {
-        const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chatName.value, { content: data });
+        const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, { content: data });
       } catch (error) {
           console.log(error);
       };
@@ -117,8 +119,7 @@ export default {
       users,
       isLoggedIn,
       currentUser,
-      chatData,
-      chatName,
+      chat,
       showCreateWindow,
       rooms,
       // functions
