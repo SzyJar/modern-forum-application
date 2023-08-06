@@ -3,7 +3,7 @@
     <button class="toggle-button" @click="toggleSidebar">{{ isHidden ? '<<' : '>>' }}</button>
     <CurrentUser :currentUser="currentUser" :chatName="chatName" @logOut="logOut" />
     <div class="users-online">
-        <h2>People online</h2>
+        <h2>Active users</h2>
         <div class="user" v-for="user in users" :key="user.id">
             <User :user="user" />
         </div>

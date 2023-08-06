@@ -4,9 +4,20 @@
     <SignIn @success="loggedIn" />
   </div>
   <div v-else>
-    <Chat :chatName="chat.name" :chatData="chat.data" :currentUser="currentUser" @sendMessage="sendMessage"/>
-    <RoomList :rooms="rooms" @roomChange="roomChange" @createNewRoom="createNewRoom" @getRooms="getRooms" />
-    <UserList :users="users" :currentUser="currentUser" :chatName="chat.name" @logOut="logOut" />
+    <Chat :chatName="chat.name"
+          :chatData="chat.data"
+          :currentUser="currentUser"
+          :usersTyping="usersTyping"
+          @sendMessage="sendMessage"
+          @typing="typing"/>
+    <RoomList :rooms="rooms"
+              @roomChange="roomChange" 
+              @createNewRoom="createNewRoom" 
+              @getRooms="getRooms" />
+    <UserList :users="users" 
+              :currentUser="currentUser" 
+              :chatName="chat.name" 
+              @logOut="logOut" />
   </div>
   <div v-if="showCreateWindow"><CreateRoom @done="createNewRoom" /></div>
 </div>
@@ -16,11 +27,14 @@
 import { ref } from 'vue'
 import axios from 'axios'
 axios.defaults.withCredentials = true;
+import { io } from "socket.io-client";
+
 import RoomList from './components/RoomList.vue'
 import UserList from './components/UserList.vue'
 import SignIn from './components/SignIn.vue'
 import Chat from './components/Chat.vue'
 import CreateRoom from './components/CreateRoom.vue'
+
 
 export default {
   name: 'App',
@@ -40,6 +54,10 @@ export default {
     });
 
     const rooms = ref(null);
+    const users = ref(null);
+
+    // Socket connection
+    const s = io(process.env.VUE_APP_API_URL);
 
     // Log in
     const loggedIn = (data) => {
@@ -58,7 +76,7 @@ export default {
       };
     };
 
-    // Change room
+    // Change room (load chat log)
     const roomChange = async (data) => {
       try {
         const response = await axios.get(process.env.VUE_APP_API_URL + 'chat/' + data);
@@ -73,6 +91,7 @@ export default {
     const sendMessage = async (data) => {
       try {
         const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, { content: data });
+        s.emit('new-message', chat.value.name);
       } catch (error) {
           console.log(error);
       };
@@ -91,29 +110,38 @@ export default {
     // Show/hide create new room pop up window
     const createNewRoom = () => {
       showCreateWindow.value = !showCreateWindow.value;
+      s.emit('room-update');
       getRooms();
     };
 
-    const users = ref([
-      { name: "first", id: 1 },
-      { name: "second", id: 2 },
-      { name: "third", id: 3 },
-      { name: "first", id: 4 },
-      { name: "second", id: 5 },
-      { name: "third", id: 6 },
-      { name: "first", id: 7 },
-      { name: "second", id: 8 },
-      { name: "third", id: 9 },
-      { name: "first", id: 10 },
-      { name: "second", id: 12 },
-      { name: "third", id: 13 },
-      { name: "first", id: 14 },
-      { name: "second", id: 15 },
-      { name: "third", id: 16 },
-      { name: "first", id: 17 },
-      { name: "second", id: 18 },
-      { name: "third", id: 19 }
-    ]);
+    // Handle socket io logic
+    s.on('new-message', (room) => {
+      if(room == chat.value.name) {
+        roomChange(chat.value.name);
+      };
+    });
+
+    s.on('room-update', () => {
+        getRooms();
+    });
+
+    // Show who is typing in chat
+    const usersTyping = ref([]);
+    const typing = () => {
+      s.emit('typing', chat.value.name, currentUser.value.name);
+    };
+    s.on('typing', (room, user) => {
+        if(room === chat.value.name && usersTyping.value.indexOf(user) === -1) {
+          usersTyping.value.push(user);
+          // Remove user after 3 seconds
+          setTimeout(() => {
+            const indexToRemove = usersTyping.value.indexOf(user);
+            if (indexToRemove !== -1) {
+              usersTyping.value.splice(indexToRemove, 1);
+            }
+          }, 3000);
+        };
+    });
     
     return {
       users,
@@ -122,13 +150,15 @@ export default {
       chat,
       showCreateWindow,
       rooms,
+      usersTyping,
       // functions
       loggedIn,
       logOut,
       roomChange,
       sendMessage,
       createNewRoom,
-      getRooms
+      getRooms,
+      typing
     }
   },
 }

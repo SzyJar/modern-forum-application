@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="chat-name">{{ chatName || "Not in conversation" }}</div>
-    <div ref="chatContainer" class="chat-container">
+    <div class="chat-container">
         <div class="message" v-for="message in localChatData" :key="message.id">
             <img :src="require('../assets/images/profile' + message.avatar + '.png')">
             <div class="header">
@@ -9,6 +9,11 @@
                 <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
             </div>
             <div class="content">{{ message.content }}</div>
+        </div>
+        <div class="users-typing">
+            <div class="user-typing" v-for="(user, index) in usersTyping" :key="index">
+                {{ user }} ... 
+            </div>
         </div>
     </div>
     <div class="send-container">
@@ -26,7 +31,7 @@
 import { ref, watch, onMounted, onUpdated } from 'vue';
 
 export default {
-    props: ['chatData', 'chatName', 'currentUser'],
+    props: ['chatData', 'chatName', 'currentUser', 'usersTyping'],
     setup(props, { emit }) {
         const message = ref('');
         const localChatData = ref([]);
@@ -34,6 +39,13 @@ export default {
 
         watch(() => props.chatData, (newVal) => {
             localChatData.value = newVal;
+        });
+
+        // watch changes in text ands end emit
+        watch(message, (newValue) => {
+            if (newValue.trim() !== '') {
+                emit('typing')
+            };
         });
 
         const scrollToBottom = () => {
@@ -44,6 +56,10 @@ export default {
         };
 
         const handleSubmit = () => {
+            if (!props.chatName || message.value.trim() === '') {
+                message.value = '';
+                return false;
+            };
             emit("sendMessage", message.value)
             localChatData.value.push({
                 id: 'placeholder',
@@ -84,7 +100,7 @@ img {
 }
 
 .chat-name {
-    color: #DDD0C8;
+    color: white;
     background: #323232;
     border: 1px solid black;
     margin-top: -1px;
@@ -107,6 +123,9 @@ img {
     left: 50%;
     transform: translate(-50%);
     padding: 10px;
+    width: calc(100% - 700px);
+    min-width: 400px;
+    max-width: 1000px;
 }
 
 form {
@@ -162,5 +181,24 @@ textarea {
 .content {
     margin-top: 20px;
 }
+
+.users-typing {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+    align-items: left;
+    text-align: left;
+    margin-top: 10px;
+    width: calc(100% - 700px);
+}
+
+.user-typing {
+    text-align: left;
+    color: #323232;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-right: 10px;
+};
 
 </style>
