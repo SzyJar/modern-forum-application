@@ -80,6 +80,7 @@ export default {
           connected.value = true;
         } else {
           console.log(error);
+          setTimeout(checkServer, 4000);
         };
       };
     };
