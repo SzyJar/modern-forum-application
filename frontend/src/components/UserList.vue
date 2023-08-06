@@ -20,7 +20,7 @@ import User from './User.vue'
 
 export default {
     props: ['users','currentUser', 'chatName'],
-    emits: ['logOut'],
+    emits: ['logOut', 'roomChange'],
     components: { CurrentUser, User },
     setup(props, { emit }) {
         const isHidden = ref(false);
@@ -34,7 +34,9 @@ export default {
         };
 
         const roomChange = (name) => {
-            emit('roomChange', name);
+            if (name){
+                emit('roomChange', name);
+            };
         };
 
         return {
