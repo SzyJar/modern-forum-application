@@ -4,8 +4,10 @@
     <CurrentUser :currentUser="currentUser" :chatName="chatName" @logOut="logOut" />
     <div class="users-online">
         <h2>Active users</h2>
-        <div class="user" v-for="user in users" :key="user.id">
-            <User :user="user" />
+        <div v-for="user in users" :key="user.id">
+            <div class="user" v-if="user.name !== currentUser.name" @click="roomChange(user.room)">
+                <User :user="user" />
+            </div>
         </div>
     </div>
 </div>
@@ -31,10 +33,15 @@ export default {
             emit('logOut');
         };
 
+        const roomChange = (name) => {
+            emit('roomChange', name);
+        };
+
         return {
             isHidden,
             toggleSidebar,
-            logOut
+            logOut,
+            roomChange
         };
     },
 }
@@ -67,7 +74,7 @@ export default {
     margin-left: 2px;
     margin-top: 10px;
     width: 98%;
-    height: 60px;
+
     border-radius: 10px;
     transition: transform 0.1s ease;
 }

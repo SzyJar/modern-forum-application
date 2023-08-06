@@ -163,6 +163,7 @@ textarea {
     min-width: 300px;
     border-radius: 20px;
     text-align: left;
+    white-space: pre-wrap;
 }
 
 .header {
@@ -180,6 +181,7 @@ textarea {
 
 .content {
     margin-top: 20px;
+    margin-bottom: 5px;
 }
 
 .users-typing {

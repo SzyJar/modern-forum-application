@@ -54,8 +54,61 @@ const s = socket(server, {
       }
 });
 
+const userList = [
+    {
+        name: 'Dummy user #1',
+        avatar: '1',
+        room: 'Test chat'
+    },
+    {
+        name: 'Dummy user with random name',
+        avatar: '1',
+        room: 'Great recipes'
+    },
+    {
+        name: 'Dummy user #2',
+        avatar: '1',
+        room: null
+    },
+];
+
 s.sockets.on('connect', (socket) => {
     console.log(`\x1b[32mNew client connected!\x1b[0m\nClient ID: ${socket.id}\n`);
+    let user = ''
+
+    socket.on('login', (name, avatar) => {
+        user = name;
+        const index = userList.findIndex((item) => item.name === user);
+        if (index === -1){
+            userList.push({
+                name: user,
+                avatar: avatar,
+                room: null
+            });
+        };
+        socket.broadcast.emit('user-list-updated', userList);
+        socket.emit('user-list-updated', userList);
+    });
+
+    socket.on('logout', () => {
+        const index = userList.findIndex((item) => item.name === user);
+        if (index !== -1){
+            userList.splice(index, 1);
+        };
+        socket.broadcast.emit('user-list-updated', userList);
+    });
+
+    socket.on('room-change', (room) => {
+        const index = userList.findIndex((item) => item.name === user);
+        if (index !== -1){
+            userList[index].room = room;
+        };
+        socket.broadcast.emit('user-list-updated', userList);
+    });
+
+    socket.on('typing', (room) => {
+        socket.broadcast.emit('typing', room, user);
+    });
 
     socket.on('new-message', (room) => {
         socket.broadcast.emit('new-message', room);
@@ -63,14 +116,15 @@ s.sockets.on('connect', (socket) => {
 
     socket.on('room-update', () => {
         socket.broadcast.emit('room-update');
-    });
-    
-    socket.on('typing', (room, user) => {
-        socket.broadcast.emit('typing', room, user);
-    });
-    
+    }); 
+
     socket.on('disconnect', () => {
-        console.log(`\x1b[31mClient disconnected!\x1b[0m\nClient ID: ${socket.id}\n`)
+        console.log(`\x1b[31mClient disconnected!\x1b[0m\nClient ID: ${socket.id}\n`);
+        const index = userList.findIndex((item) => item.name === user);
+        if (index !== -1){
+            userList.splice(index, 1);
+        };
+        socket.broadcast.emit('user-list-updated', userList);
     });
 });
 

@@ -9,7 +9,7 @@
           :currentUser="currentUser"
           :usersTyping="usersTyping"
           @sendMessage="sendMessage"
-          @typing="typing"/>
+          @typing="typing" />
     <RoomList :rooms="rooms"
               @roomChange="roomChange" 
               @createNewRoom="createNewRoom" 
@@ -17,7 +17,8 @@
     <UserList :users="users" 
               :currentUser="currentUser" 
               :chatName="chat.name" 
-              @logOut="logOut" />
+              @logOut="logOut"
+              @roomChange="roomChange" />
   </div>
   <div v-if="showCreateWindow"><CreateRoom @done="createNewRoom" /></div>
 </div>
@@ -54,7 +55,6 @@ export default {
     });
 
     const rooms = ref(null);
-    const users = ref(null);
 
     // Socket connection
     const s = io(process.env.VUE_APP_API_URL);
@@ -64,6 +64,7 @@ export default {
       currentUser.value.name = data.name;
       currentUser.value.avatar = data.avatar;
       isLoggedIn.value = true;
+      s.emit('login', currentUser.value.name, currentUser.value.avatar);
     };
 
     // Log out
@@ -71,6 +72,7 @@ export default {
       try {
           const response = await axios.post(process.env.VUE_APP_API_URL + 'logout');
           isLoggedIn.value = false;
+          s.emit('logout', currentUser.value.name);
       } catch (error) {
           console.log(error);
       };
@@ -82,6 +84,7 @@ export default {
         const response = await axios.get(process.env.VUE_APP_API_URL + 'chat/' + data);
         chat.value.data = response.data;
         chat.value.name = data;
+        s.emit('room-change', data);
       } catch (error) {
           console.log(error);
       };
@@ -103,7 +106,7 @@ export default {
         const response = await axios.get(process.env.VUE_APP_API_URL + 'chat');
         rooms.value = response.data;
       } catch (error) {
-        console.log(error.message);
+        console.log(error);
       };
     };
 
@@ -128,7 +131,7 @@ export default {
     // Show who is typing in chat
     const usersTyping = ref([]);
     const typing = () => {
-      s.emit('typing', chat.value.name, currentUser.value.name);
+      s.emit('typing', chat.value.name);
     };
     s.on('typing', (room, user) => {
         if(room === chat.value.name && usersTyping.value.indexOf(user) === -1) {
@@ -143,6 +146,12 @@ export default {
         };
     });
     
+    // Show who is active
+    const users = ref([]);
+    s.on('user-list-updated', (userlist) => {
+      users.value = userlist;
+    });
+
     return {
       users,
       isLoggedIn,
