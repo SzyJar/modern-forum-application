@@ -6,34 +6,26 @@
         <div class="room" v-for="room in rooms" :key="room.id" @click="roomChange(room.name)">
             <Room :room="room" />
         </div>
-        <div class='room'>
+        <div class='room' @click="CreateRoom">
           <Room :room="{ name: 'Create new room', icon: 'new' }" />
         </div>
     </div>
 </div>
- 
 </template>
 
 <script>
 import { ref, onMounted } from 'vue'
-import axios from 'axios'
-axios.defaults.withCredentials = true;
 
 import Room from './Room.vue'
 
 export default {
   components: { Room },
+  props: ['rooms'],
   setup(props, { emit }) {
     const isHidden = ref(false);
-    const rooms = ref(null);
 
-    const getRooms = async () => {
-        try {
-          const response = await axios.get(process.env.VUE_APP_API_URL + 'chat');
-          rooms.value = response.data;
-        } catch (error) {
-          console.log(error.message);
-        };
+    const getRooms = () => {
+      emit('getRooms');
     };
 
     const toggleSidebar = () => {
@@ -43,15 +35,20 @@ export default {
       emit('roomChange', name);
     };
 
+    const CreateRoom = () => {
+      emit('createNewRoom');
+    }
+
     onMounted(getRooms);
 
     return {
       isHidden,
-      rooms,
+      //rooms,
       // functions
       toggleSidebar,
       getRooms,
-      roomChange
+      roomChange,
+      CreateRoom
     };
   },
 }

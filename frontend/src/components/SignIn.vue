@@ -137,12 +137,6 @@ export default {
 </script>
 
 <style scoped>
-h2 {
-    border-bottom: 1px solid #DDD0C8;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    text-transform: uppercase;
-}
 form {
     max-width: 420px;
     margin: 30px auto;

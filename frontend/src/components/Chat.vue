@@ -4,7 +4,8 @@
     <div ref="chatContainer" class="chat-container">
         <div class="message" v-for="message in localChatData" :key="message.id">
             <div class="header">
-                <div class="sender">{{ message.sender }} {{ new Date(message.timestamp).toLocaleString() }}</div>
+                <div class="sender">{{ message.sender }}</div>
+                <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
             </div>
             <div class="content">{{ message.content }}</div>
         </div>
@@ -36,7 +37,6 @@ export default {
 
         const scrollToBottom = () => {
             if (messagePrev.value === message.value) {
-                console.log('fire');
                 window.scrollTo(0, document.body.scrollHeight);      
             };
             messagePrev.value = message.value;
@@ -127,7 +127,7 @@ textarea {
 .message {
     background: #404040;
     padding: 10px;
-    margin-top: 15px;
+    margin-top: 30px;
     width: calc(100% - 700px);
     border-radius: 20px;
     text-align: left;
@@ -144,7 +144,7 @@ textarea {
 }
 
 .content {
-    margin-top: 10px;
+    margin-top: 20px;
 }
 
 </style>
