@@ -66,12 +66,13 @@ export default {
         const response = await axios.get(process.env.VUE_APP_API_URL);
         if (response.status === 200) {
           connected.value = true;
-          isLoggedIn.value = true;
           if (localStorage.getItem('username') && localStorage.getItem('avatar')) {
             currentUser.value.name = localStorage.getItem('username');
             currentUser.value.avatar = localStorage.getItem('avatar');
             isLoggedIn.value = true;
             s.emit('login', currentUser.value.name, currentUser.value.avatar);
+          } else {
+            isLoggedIn.value = false;
           };
         };
       } catch (error) {
@@ -105,6 +106,8 @@ export default {
           const response = await axios.post(process.env.VUE_APP_API_URL + 'logout');
           isLoggedIn.value = false;
           s.emit('logout', currentUser.value.name);
+          localStorage.removeItem('avatar');
+          localStorage.removeItem('username');
       } catch (error) {
           console.log(error);
       };
