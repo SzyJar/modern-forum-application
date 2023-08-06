@@ -3,9 +3,9 @@
     <SignIn @success="loggedIn" />
   </div>
   <div v-else>
-    <Chat :chatName="chatName" :chatData="chatData" @sendMessage="sendMessage"/>
+    <Chat :chatName="chatName" :chatData="chatData" :currentUser="currentUser" @sendMessage="sendMessage"/>
     <RoomList @roomChange="roomChange" />
-    <UserList :users="users" :currentUser="currentUser" @logOut="logOut" />
+    <UserList :users="users" :currentUser="currentUser" :chatName="chatName" @logOut="logOut" />
   </div>
 </template>
 
@@ -76,7 +76,16 @@ export default {
       { name: "third", id: 6 },
       { name: "first", id: 7 },
       { name: "second", id: 8 },
-      { name: "third", id: 9 }
+      { name: "third", id: 9 },
+      { name: "first", id: 10 },
+      { name: "second", id: 12 },
+      { name: "third", id: 13 },
+      { name: "first", id: 14 },
+      { name: "second", id: 15 },
+      { name: "third", id: 16 },
+      { name: "first", id: 17 },
+      { name: "second", id: 18 },
+      { name: "third", id: 19 }
     ]);
     
     return {

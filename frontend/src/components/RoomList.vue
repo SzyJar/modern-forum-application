@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 
@@ -43,7 +43,8 @@ export default {
       emit('roomChange', name);
     };
 
-    getRooms();
+    onMounted(getRooms);
+
     return {
       isHidden,
       rooms,
@@ -86,6 +87,7 @@ export default {
     height: 60px;
     border-radius: 10px;
     transition: transform 0.1s ease;
+    overflow-wrap: break-word;
 }
 
 .room:hover{

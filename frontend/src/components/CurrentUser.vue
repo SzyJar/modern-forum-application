@@ -2,7 +2,7 @@
   <div class="currentUser">
     <img :src="require('../assets/images/profile' + currentUser.avatar + '.png')">
     <p>Loged in as: {{ currentUser.name }}</p>
-    <p v-if="roomName">Current chat: {{ roomName }}</p>
+    <p v-if="chatName">Current chat: {{ chatName }}</p>
     <p v-else>Not in conversation</p>
     <button @click="logOut" class="logout">LOG OUT</button>
   </div>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-    props: ['currentUser'],
+    props: ['currentUser', 'chatName'],
     emits: ['logOut'],
     setup(props, { emit }) {
         const logOut = () => {
@@ -38,9 +38,9 @@ img {
     padding-top: 10px;
     padding-bottom: 10px;
     width: 100%;
-    height: 150px;
     border-radius: 10px;
     font-weight: 600;
+    overflow-wrap: break-word;
 }
 
 p {

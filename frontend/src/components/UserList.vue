@@ -1,7 +1,7 @@
 <template>
 <div class="sideBar" :class="{ 'sideBar-hidden': isHidden }">
     <button class="toggle-button" @click="toggleSidebar">{{ isHidden ? '<<' : '>>' }}</button>
-    <CurrentUser :currentUser="currentUser" @logOut="logOut" />
+    <CurrentUser :currentUser="currentUser" :chatName="chatName" @logOut="logOut" />
     <div class="users-online">
         <h2>People online</h2>
         <div class="user" v-for="user in users" :key="user.id">
@@ -17,7 +17,7 @@ import CurrentUser from './CurrentUser.vue'
 import User from './User.vue'
 
 export default {
-    props: ['users','currentUser'],
+    props: ['users','currentUser', 'chatName'],
     emits: ['logOut'],
     components: { CurrentUser, User },
     setup(props, { emit }) {

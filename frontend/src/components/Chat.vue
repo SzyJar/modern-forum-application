@@ -1,9 +1,11 @@
 <template>
 <div>
-    <div class="chat-name">{{ chatName || "Not in chat" }}</div>
-    <div class="chat-container">
-        <div class="message" v-for="message in chatData" :key="message.id">
-            <div class="sender">{{ message.sender }}</div>
+    <div class="chat-name">{{ chatName || "Not in conversation" }}</div>
+    <div ref="chatContainer" class="chat-container">
+        <div class="message" v-for="message in localChatData" :key="message.id">
+            <div class="header">
+                <div class="sender">{{ message.sender }} {{ new Date(message.timestamp).toLocaleString() }}</div>
+            </div>
             <div class="content">{{ message.content }}</div>
         </div>
     </div>
@@ -19,20 +21,46 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, watch, onMounted, onUpdated } from 'vue';
+
 export default {
-    props: ['chatData', 'chatName'],
+    props: ['chatData', 'chatName', 'currentUser'],
     setup(props, { emit }) {
         const message = ref('');
+        const localChatData = ref([]);
+        const messagePrev = ref(null);
+
+        watch(() => props.chatData, (newVal) => {
+            localChatData.value = newVal;
+        });
+
+        const scrollToBottom = () => {
+            if (messagePrev.value === message.value) {
+                console.log('fire');
+                window.scrollTo(0, document.body.scrollHeight);      
+            };
+            messagePrev.value = message.value;
+        };
 
         const handleSubmit = () => {
             emit("sendMessage", message.value)
-            message.value = ''
-        }
+            localChatData.value.push({
+                id: 'placeholder',
+                sender: props.currentUser.name,
+                content: message.value,
+                timestamp: new Date(),
+            });
+            message.value = '';
+            scrollToBottom();
+        };
+
+        onMounted(scrollToBottom);
+        onUpdated(scrollToBottom);
 
         return {
             message,
-            handleSubmit ,
+            localChatData,
+            handleSubmit,
         }
     }
 }
@@ -55,7 +83,7 @@ button {
     text-transform: uppercase;
     position: fixed;
     top: 0;
-    width: 100%
+    width: 100%;
 }
 
 .send-container {
@@ -92,6 +120,8 @@ textarea {
     margin-bottom: 80px;
     height: 100%;
     color: #DDD0C8;
+    overflow-wrap: break-word;
+    overflow-y: auto;
 }
 
 .message {
@@ -101,6 +131,11 @@ textarea {
     width: calc(100% - 700px);
     border-radius: 20px;
     text-align: left;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
 }
 
 .sender {
