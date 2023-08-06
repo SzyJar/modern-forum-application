@@ -15,7 +15,7 @@
           @typing="typing" />
     <RoomList :rooms="rooms"
               @roomChange="roomChange" 
-              @createNewRoom="createNewRoom" 
+              @createNewRoom="createNewRoomWindow"
               @getRooms="getRooms" />
     <UserList :users="users" 
               :currentUser="currentUser" 
@@ -77,8 +77,7 @@ export default {
         };
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          isLoggedIn.value = false;
-          connected.value = true;
+          logOut();
         } else {
           console.log(error);
           setTimeout(checkServer, 4000);
@@ -105,6 +104,7 @@ export default {
       try {
           const response = await axios.post(process.env.VUE_APP_API_URL + 'logout');
           isLoggedIn.value = false;
+          connected.value = true;
           s.emit('logout', currentUser.value.name);
           localStorage.removeItem('avatar');
           localStorage.removeItem('username');
@@ -121,7 +121,11 @@ export default {
         chat.value.name = data;
         s.emit('room-change', data);
       } catch (error) {
+        if (error.response && error.response.status === 401) {
+          logOut();
+        } else {
           console.log(error);
+        };
       };
     };
 
@@ -131,7 +135,11 @@ export default {
         const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, { content: data });
         s.emit('new-message', chat.value.name);
       } catch (error) {
+        if (error.response && error.response.status === 401) {
+          logOut();
+        } else {
           console.log(error);
+        };
       };
     };
 
@@ -141,16 +149,25 @@ export default {
         const response = await axios.get(process.env.VUE_APP_API_URL + 'chat');
         rooms.value = response.data;
       } catch (error) {
-        console.log(error);
+        if (error.response && error.response.status === 401) {
+          logOut();
+        } else {
+          console.log(error);
+        };
       };
     };
 
     // Show/hide create new room pop up window
+    const createNewRoomWindow = () => {
+      showCreateWindow.value = !showCreateWindow.value;
+    };
+
     const createNewRoom = () => {
       showCreateWindow.value = !showCreateWindow.value;
       s.emit('room-update');
       getRooms();
     };
+    
 
     // Handle socket io logic
     s.on('new-message', (room) => {
@@ -204,7 +221,8 @@ export default {
       createNewRoom,
       getRooms,
       typing,
-      checkServer
+      checkServer,
+      createNewRoomWindow
     }
   },
 }
