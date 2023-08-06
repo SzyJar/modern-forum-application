@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const session = require('express-session');
-const cookieParser = require('cookie-parser');
 const socket = require('socket.io');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -31,7 +30,6 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser());
 app.use(
     session({
         secret: process.env.SECURITY_KEY,
