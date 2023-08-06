@@ -1,5 +1,8 @@
 <template>
-<div>
+<div v-if="!connected"> 
+  Waiting for response from server ...
+</div>
+<div v-else>
   <div v-if="!isLoggedIn">
     <SignIn @success="loggedIn" />
   </div>
@@ -25,7 +28,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 import { io } from "socket.io-client";
@@ -56,11 +59,39 @@ export default {
 
     const rooms = ref(null);
 
+    // Check if server is up
+    const connected = ref(false);
+    const checkServer = async () => {
+      try {
+        const response = await axios.get(process.env.VUE_APP_API_URL);
+        if (response.status === 200) {
+          connected.value = true;
+          isLoggedIn.value = true;
+          if (localStorage.getItem('username') && localStorage.getItem('avatar')) {
+            currentUser.value.name = localStorage.getItem('username');
+            currentUser.value.avatar = localStorage.getItem('avatar');
+            isLoggedIn.value = true;
+            s.emit('login', currentUser.value.name, currentUser.value.avatar);
+          };
+        };
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          isLoggedIn.value = false;
+          connected.value = true;
+        } else {
+          console.log(error);
+        };
+      };
+    };
+    onMounted(checkServer);
+
     // Socket connection
     const s = io(process.env.VUE_APP_API_URL);
 
     // Log in
     const loggedIn = (data) => {
+      localStorage.setItem('username', data.name);
+      localStorage.setItem('avatar', data.avatar);
       currentUser.value.name = data.name;
       currentUser.value.avatar = data.avatar;
       isLoggedIn.value = true;
@@ -160,6 +191,7 @@ export default {
       showCreateWindow,
       rooms,
       usersTyping,
+      connected,
       // functions
       loggedIn,
       logOut,
@@ -167,7 +199,8 @@ export default {
       sendMessage,
       createNewRoom,
       getRooms,
-      typing
+      typing,
+      checkServer
     }
   },
 }

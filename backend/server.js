@@ -74,7 +74,7 @@ const userList = [
 
 s.sockets.on('connect', (socket) => {
     console.log(`\x1b[32mNew client connected!\x1b[0m\nClient ID: ${socket.id}\n`);
-    let user = ''
+    let user = '';
 
     socket.on('login', (name, avatar) => {
         user = name;

@@ -17,7 +17,7 @@ module.exports = function (app) {
 
     app.route('/')
     // Confirm server status
-    .get(function(req, res) {
+    .get(auth, function(req, res) {
         res.status(200).end('server is up');
     });
 
