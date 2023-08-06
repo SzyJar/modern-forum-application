@@ -61,7 +61,7 @@ module.exports = function (app) {
                     };
                     return res.status(401).end('Incorrect password');
                 } else {
-                    return res.status(401).end('User does not exist');
+                    return res.status(404).end('User does not exist');
                 };
             } catch (err) {
                 console.error('Error occurred in POST request to /signup', err.message);
@@ -92,7 +92,7 @@ module.exports = function (app) {
             const chat = await Chat.findOne({ name: name });
             
             if(!chat) {
-                return res.status(401).end('Chat does not exist');
+                return res.status(404).end('Chat does not exist');
             };
             
             if (chat.users.length === 0 || chat.users.includes(req.session.userId)) {
@@ -110,7 +110,7 @@ module.exports = function (app) {
                   return res.status(201).json(newChatMessage);
             } else {
                 // Client is trying to access other's private chat
-                return res.status(401).end('Chat does not exist');
+                return res.status(404).end('Chat does not exist');
             };
         } catch(err) {
             console.error('Error occurred in POST request to /message/:chatname', err.message);
@@ -146,14 +146,14 @@ module.exports = function (app) {
             const chat = await Chat.findOne({ name: name })
 
             if(!chat) {
-                return res.status(401).end('Chat does not exist');
+                return res.status(404).end('Chat does not exist');
             };
 
             if(chat.users.length === 0 || chat.users.includes(req.session.userId)) {
                 return res.json(chat.messages);
             };
             // Client is trying to access other's private chat
-            return res.status(401).end('Chat does not exist');
+            return res.status(404).end('Chat does not exist');
         } catch(err) {
             console.error('Error occurred in GET request to /chat/:chatname', err.message);
             res.status(500).end('An error occurred while retrieving messages');
