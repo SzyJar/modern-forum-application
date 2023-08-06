@@ -3,6 +3,7 @@
     <div class="chat-name">{{ chatName || "Not in conversation" }}</div>
     <div ref="chatContainer" class="chat-container">
         <div class="message" v-for="message in localChatData" :key="message.id">
+            <img :src="require('../assets/images/profile' + message.avatar + '.png')">
             <div class="header">
                 <div class="sender">{{ message.sender }}</div>
                 <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
@@ -47,6 +48,7 @@ export default {
             localChatData.value.push({
                 id: 'placeholder',
                 sender: props.currentUser.name,
+                avatar: props.currentUser.avatar,
                 content: message.value,
                 timestamp: new Date(),
             });
@@ -70,6 +72,15 @@ export default {
 button {
     height: 100%;
     border-radius: 0;
+}
+
+img {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-top: -24px;
+    margin-left: -24px;
 }
 
 .chat-name {
@@ -130,6 +141,7 @@ textarea {
     padding: 10px;
     margin-top: 30px;
     width: calc(100% - 700px);
+    min-width: 300px;
     border-radius: 20px;
     text-align: left;
 }
@@ -138,11 +150,13 @@ textarea {
     display: flex;
     justify-content: space-between;
     color: #DDD0C8;
+    margin-top: -10px;
 }
 
 .sender {
     font-weight: 600;
     text-transform: uppercase;
+    margin-left: 20px;
 }
 
 .content {

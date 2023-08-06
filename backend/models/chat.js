@@ -6,6 +6,10 @@ const chatMessageSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
+    avatar: {
+      type: Number,
+      requierd: true,
+    },
     content: {
       type: String,
       required: true,

@@ -99,6 +99,7 @@ module.exports = function (app) {
                 const user = await User.findById(req.session.userId);
                 const newChatMessage = {
                     sender: user.name,
+                    avatar: user.avatar,
                     content: content,
                     timestamp: new Date(),
                   };
