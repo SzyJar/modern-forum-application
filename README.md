@@ -5,6 +5,12 @@ Visit https://szyjar.github.io/modern-forum-application/ for live project.
 Backend is hosted on replit.com
 https://replit.com/@RedGlimmer/modern-forum-app
 
+If you are having trouble logging in or registering, please make sure your browser allows third-party cookies.
+
+![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/af3e9191-3739-4af3-b6b9-70b6c45156a6)
+
+
+
 # How it works
 
 Client (frontend) sends request with axios to API hosted on replit.com (backend), server performs operations on Mongo database and returns information to client. In addition,
