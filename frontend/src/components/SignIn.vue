@@ -60,7 +60,7 @@ export default {
         const registerScreen = ref(false);
         const buttonText = ref({
             submit: 'Log in',
-            change: 'Register new account instead'
+            change: 'Register new Account instead'
         });
 
         // Handle avatar choice
@@ -80,11 +80,11 @@ export default {
             passwordError.value = '';
             loginError.value = '';
             if (!registerScreen.value) {
-                buttonText.value.change = 'Register new account instead';
+                buttonText.value.change = 'Register new Account instead';
                 buttonText.value.submit = 'Log in';
                 userData.value.newuser= false;
             } else {
-                buttonText.value.change = 'Use existing account instead';
+                buttonText.value.change = 'Use existing Account instead';
                 buttonText.value.submit = 'Create an Account';
                 userData.value.newuser= true;
             };

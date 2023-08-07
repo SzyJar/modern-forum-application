@@ -45,22 +45,29 @@ export default {
 </script>
 
 <style scoped>
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.8);
+    width: 100%;
+    height: 100%;
+}
+
 .window {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%);
     width: 400px;
     padding: 20px;
     margin: 200px auto;
     background: #323232;
     border-radius: 10px;
     text-align: left;
-    z-index: 9999;
 }
-.backdrop {
-    top: 0;
-    position: fixed;
-    background: rgba(0,0,0,0.8);
-    width: 100%;
-    height: 100%;
-}
+
 label {
     color: #DDD0C8;
     display: inline-block;
@@ -68,12 +75,14 @@ label {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+
 input, select {
     display: block;
     padding: 10px 6px;
     width: 100%;
     box-sizing: border-box;
 }
+
 button {
     padding: 10px 20px;
     margin-top: 20px;
