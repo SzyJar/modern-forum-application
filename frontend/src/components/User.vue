@@ -48,6 +48,8 @@ p {
 }
 
 .in-room {
+  margin-left: 5px;
+  margin-top: 5px;
   font-weight: 600;
 }
 

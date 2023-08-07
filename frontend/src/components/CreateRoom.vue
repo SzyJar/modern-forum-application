@@ -4,7 +4,7 @@
     <h2>Create new conversation</h2>
     <form @submit.prevent="handleSubmit">
         <label>Conversation name:</label>
-        <input type="text" v-model="chatName" required>
+        <input type="text" v-model="chatName" maxlength="44" required>
         <div class="submit">
             <button>Create conversation</button>
         </div>
@@ -52,11 +52,12 @@ export default {
     background: #323232;
     border-radius: 10px;
     text-align: left;
+    z-index: 9999;
 }
 .backdrop {
     top: 0;
     position: fixed;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     width: 100%;
     height: 100%;
 }

@@ -3,7 +3,7 @@
         <h2>Please register to access the forum</h2>
 
         <label>Name:</label>
-        <input type="text" v-model="userData.name" required>
+        <input type="text" v-model="userData.name" maxlength="30" required>
 
         <label>Password:</label>
         <input type="password" v-model="userData.password" required>
