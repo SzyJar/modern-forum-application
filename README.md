@@ -12,7 +12,7 @@ a web socket connection is established between clients and server to handle clie
 When user makes request to modify database (make new chat room, send message) server makes changes in database accordingly and sends information to other clients that a change has been made.
 
 ## Home screen
-Home screens shows available chat rooms and active users.
+Home screen shows available chat rooms and active users.
 
 ![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/b3a628f6-93ca-49b4-95fe-3914443f677c)
 
