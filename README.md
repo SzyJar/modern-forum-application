@@ -7,7 +7,7 @@ https://replit.com/@RedGlimmer/modern-forum-app
 
 # How it works
 
-Client (frontend) sends request with axion to API hosted on replit.com (backend), server performs operations on Mongo database and returns information to client. In addition,
+Client (frontend) sends request with axios to API hosted on replit.com (backend), server performs operations on Mongo database and returns information to client. In addition,
 a web socket connection is established between clients and server to handle client status. Other clients can see who is in which chat room and who is typing. <br><br>
 When user makes request to modify database (make new chat room, send message) server makes changes in database accordingly and sends information to other clients that a change has been made.
 
