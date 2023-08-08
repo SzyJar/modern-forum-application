@@ -1,14 +1,14 @@
 <template>
 <div class="backdrop" @click="close">
-    <div class="window" @click.stop>
-    <h2>Create new conversation</h2>
-    <form @submit.prevent="handleSubmit">
-        <label>Conversation name:</label>
-        <input type="text" v-model="chatName" maxlength="44" required>
-        <div class="submit">
-            <button>Create conversation</button>
-        </div>
-    </form>
+    <div class="pop-up-window" @click.stop>
+        <h2>Create new conversation</h2>
+        <form @submit.prevent="handleSubmit">
+            <label>Conversation name:</label>
+            <input type="text" v-model="chatName" maxlength="44" required>
+            <div class="submit">
+                <button>Create conversation</button>
+            </div>
+        </form>
     </div>
 </div>
 </template>
@@ -46,6 +46,15 @@ export default {
 
 <style scoped>
 
+.pop-up-window {
+    width: 400px;
+    padding: 20px;
+    margin: 200px auto;
+    background: #323232;
+    border-radius: 10px;
+    text-align: left;
+}
+
 .backdrop {
     position: fixed;
     top: 0;
@@ -55,18 +64,6 @@ export default {
     height: 100%;
 }
 
-.window {
-    position: fixed;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%);
-    width: 400px;
-    padding: 20px;
-    margin: 200px auto;
-    background: #323232;
-    border-radius: 10px;
-    text-align: left;
-}
 
 label {
     color: #DDD0C8;

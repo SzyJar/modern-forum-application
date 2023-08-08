@@ -23,7 +23,9 @@
               @logOut="logOut"
               @roomChange="roomChange" />
   </div>
-  <div v-if="showCreateWindow"><CreateRoom @done="createNewRoom" /></div>
+  <div v-if="showCreateWindow">
+    <CreateRoom @done="createNewRoom" />
+  </div>
 </div>
 </template>
 
