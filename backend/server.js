@@ -52,23 +52,8 @@ const s = socket(server, {
       }
 });
 
-const userList = [
-    {
-        name: 'Dummy user #1',
-        avatar: '1',
-        room: 'Test chat'
-    },
-    {
-        name: 'Dummy user with random name',
-        avatar: '1',
-        room: 'Great recipes'
-    },
-    {
-        name: 'Dummy user #2',
-        avatar: '1',
-        room: null
-    },
-];
+// Store active users
+const userList = [];
 
 s.sockets.on('connect', (socket) => {
     console.log(`\x1b[32mNew client connected!\x1b[0m\nClient ID: ${socket.id}\n`);
