@@ -146,7 +146,7 @@ form {
     border-radius: 10px;
 }
 label {
-    color: #DDD0C8;
+    color: white;
     display: inline-block;
     margin: 25px 0 15px;
     text-transform: uppercase;

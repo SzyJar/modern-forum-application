@@ -237,7 +237,7 @@ export default {
 }
 
 body {
-  background: #DDD0C8;
+  background: #e6e6e6;
   color: #242424;
   min-width: 750px;
   min-height: 400px;
@@ -278,7 +278,7 @@ button:hover {
 }
 
 h2 {
-  color: #DDD0C8;
+  color: white;
   border-bottom: 1px solid #DDD0C8;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   text-align: center;
