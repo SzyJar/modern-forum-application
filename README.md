@@ -1,6 +1,6 @@
 # Forum application
 
-Visit https://szyjar.github.io/modern-forum-application/ for live project.<br>
+## Visit https://szyjar.github.io/modern-forum-application/ for live project.<br>
 (Waking up the replit may take a few seconds.)
 
 Backend is hosted on replit.com
