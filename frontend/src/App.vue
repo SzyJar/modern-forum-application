@@ -1,6 +1,6 @@
 <template>
 <div v-if="!connected"> 
-  Waiting for response from server ...
+  <Spinner />
 </div>
 <div v-else>
   <div v-if="!isLoggedIn">
@@ -40,11 +40,12 @@ import UserList from './components/UserList.vue'
 import SignIn from './components/SignIn.vue'
 import Chat from './components/Chat.vue'
 import CreateRoom from './components/CreateRoom.vue'
+import Spinner from './components/Spinner.vue'
 
 
 export default {
   name: 'App',
-  components: { RoomList, UserList, SignIn, Chat, CreateRoom },
+  components: { RoomList, UserList, SignIn, Chat, CreateRoom, Spinner },
   setup() {
     const isLoggedIn = ref(false);
     const currentUser = ref({
