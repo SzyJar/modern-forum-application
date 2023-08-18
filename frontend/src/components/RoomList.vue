@@ -4,10 +4,10 @@
     <div class="rooms">
         <h2>Conversations</h2>
         <div class="room" v-for="room in rooms" :key="room.id" @click="roomChange(room.name)">
-            <Room :room="room" />
+            <Room :room="room" icon="<i class='fa-solid fa-comment-dots'></i>" />
         </div>
         <div class='room' @click="CreateRoom">
-          <Room :room="{ name: 'Create new room', icon: 'new' }" />
+          <Room :room="{ name: 'Create new room' }" icon='<i class="fa-solid fa-comment-medical"></i>' />
         </div>
     </div>
 </div>

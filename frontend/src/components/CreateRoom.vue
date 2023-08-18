@@ -49,8 +49,8 @@ export default {
 .pop-up-window {
     width: 400px;
     padding: 20px;
-    margin: 200px auto;
-    background: #323232;
+    background: #1a1919;
+    border: 1px solid white;
     border-radius: 10px;
     text-align: left;
 }
@@ -59,11 +59,12 @@ export default {
     position: fixed;
     top: 0;
     left: 0;
+    display: grid;
+    place-items: center;
     background: rgba(0,0,0,0.8);
     width: 100%;
     height: 100%;
 }
-
 
 label {
     color: white;

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="avatar">
-            <img :src="require('../assets/images/icon' + room.icon +'.png')">
+        <div class="icon">
+            <div v-html="icon"></div>
         </div>
         <div class="name">{{ room.name }}</div>
     </div>
@@ -9,7 +9,7 @@
 
 <script>
 export default {
-    props: ['room'],
+    props: ['room', 'icon'],
 }
 </script>
 
@@ -19,6 +19,10 @@ img {
     height: 34px;
     border-radius: 50%;
     border: 1px solid black;
+}
+.icon {
+    font-size: 190%;
+    margin-top: 20px, auto;
 }
 
 div {

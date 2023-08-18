@@ -20,7 +20,7 @@
         <form @submit.prevent="handleSubmit">
             <textarea type="text" v-model="message" required />
                 <div class="submit">
-                <button>{{ "Send message" }}</button>
+                <button><i class="fa-solid fa-paper-plane send"></i></button>
             </div>
         </form>
     </div>
@@ -88,6 +88,12 @@ export default {
 button {
     height: 100%;
     border-radius: 0;
+}
+
+.send{
+    font-size: 190%;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 img {

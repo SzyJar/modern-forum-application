@@ -34,6 +34,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 import { io } from "socket.io-client";
+import '@fortawesome/fontawesome-free/css/all.css';
 
 import RoomList from './components/RoomList.vue'
 import UserList from './components/UserList.vue'

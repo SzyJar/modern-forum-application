@@ -25,12 +25,14 @@
             <img :src="image.src" alt="Avatar" :class="{'avatar-image': true, 'selected-avatar': isSelectedAvatar(image.id)}" >
         </label>
         </div>
-
         <div class="submit">
             <button>{{ buttonText.submit }}</button>
         </div>
         <div v-if="loginError" class="error">{{ loginError }}</div>
         </form>
+        <div class="submit" v-if="!registerScreen" @click="guestLogin">
+            <button>Log in as a Guest</button>
+        </div>
     <button @click='changeScreen'>{{ buttonText.change }}</button>
 </template>
 
@@ -92,9 +94,9 @@ export default {
         };
 
         // Handle sign up logic
-        const signupUser = async () => {
+        const signupUser = async (data = userData.value) => {
             try {
-                const response = await axios.post(process.env.VUE_APP_API_URL + 'signup', userData.value);
+                const response = await axios.post(process.env.VUE_APP_API_URL + 'signup', data);
                 emit('success', response.data);
             } catch (error) {
                 if (error.request) {
@@ -103,6 +105,16 @@ export default {
                     loginError.value = 'An error has occurred';
                 };
             };
+        };
+
+        const guestLogin = () => {
+            const guestData = {
+                name: 'Guest',
+                password: 'Guest',
+                avatar: 1,
+                newuser: false
+            };
+            signupUser(guestData);
         };
 
         const handleSubmit = () => {
@@ -130,7 +142,8 @@ export default {
             signupUser,
             handleSubmit,
             changeScreen,
-            isSelectedAvatar
+            isSelectedAvatar,
+            guestLogin
         };
     },
 }
