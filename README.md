@@ -15,7 +15,8 @@ Client sends request with axios to API hosted on replit.com, server performs ope
 a web socket connection is established between clients and server to handle client status. Other clients can see who is in which chat room and who is typing. <br><br>
 When user makes request to modify database (make new chat room, send message) server makes changes in database accordingly and sends information to other clients that a change has been made.
 
-![2023-08-17 145303](https://github.com/SzyJar/modern-forum-application/assets/107247457/91d98966-30d1-4041-89f7-2900b7be9871)
+![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/74cdba3d-122c-4a4a-9277-a9f49f9ce342)
+
 
 Clicking on the conversation or user will take the client to the specified chat room.
 The client can see who is typing and who is present in a conversation.
