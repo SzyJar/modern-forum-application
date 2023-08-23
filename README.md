@@ -9,7 +9,7 @@ https://replit.com/@RedGlimmer/modern-forum-app
 User authentication is done using express-session.
 If you are having trouble logging in or registering, please make sure your browser allows third-party cookies.
 
-# Description
+#
 
 Client sends request with axios to API hosted on replit.com, server performs operations on Mongo database and returns information to client. In addition,
 a web socket connection is established between clients and server to handle client status. Other clients can see who is in which chat room and who is typing. <br><br>
