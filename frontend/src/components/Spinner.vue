@@ -1,16 +1,21 @@
 <template>
 <div class="container">
-<p> Waiting for response from replit server ...</p>
-  <div class="loading-circle">
-    <div class="spinner"></div>
+  <div class="loading">
+    <p>Connecting to the server</p>
+      <div class="loading-circle">
+        <div class="spinner"></div>
+      </div>
+    <p>Please wait</p>
   </div>
-<p>Please Wait</p>
 </div>
 </template>
 
 <style>
 .container {
-  margin: 30px auto;
+  display: grid;
+  align-items: center;
+  gap: 10px;
+  height: 100vh;
 }
 .loading-circle {
   display: flex;
@@ -20,12 +25,12 @@
 }
 
 .spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid black;
+  width: 70px;
+  height: 70px;
+  border: 5px solid rgba(0, 0, 0, 0.1);
+  border-top: 5px solid black;
   border-radius: 50%;
-  animation: spin 2s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {

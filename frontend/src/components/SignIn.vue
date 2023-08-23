@@ -1,39 +1,46 @@
 <template>
+<div class="container">
+  <div class="content">
     <form @submit.prevent="handleSubmit">
-        <h2>Please register to access the forum</h2>
+      <h2>{{ header }}</h2>
 
-        <label>Name:</label>
-        <input type="text" v-model="userData.name" maxlength="30" required>
+      <label>Name:</label>
+      <input type="text" v-model="userData.name" maxlength="30" required>
 
-        <label>Password:</label>
-        <input type="password" v-model="userData.password" required>
-        <div v-if="passwordError" class="error">{{ passwordError }}</div>
+      <label>Password:</label>
+      <input type="password" v-model="userData.password" required>
+      <div v-if="passwordError" class="error">{{ passwordError }}</div>
 
-        <label v-if="registerScreen">Repeat password:</label>
-        <input v-if="registerScreen" type="password" v-model="password2" required>
-        <div v-if="passwordError && registerScreen" class="error">{{ passwordError }}</div>
+      <label v-if="registerScreen">Repeat password:</label>
+      <input v-if="registerScreen" type="password" v-model="password2" required>
+      <div v-if="passwordError && registerScreen" class="error">{{ passwordError }}</div>
 
-        <label v-if="registerScreen">Choose your avatar:</label>
-        <div v-if="registerScreen" class="avatar-options">
-        <label v-for="image in imageOptions" :key="image.id">
-            <input
-                type="radio"
-                :value="image.id"
-                v-model="userData.avatar"
-                required
-            >
-            <img :src="image.src" alt="Avatar" :class="{'avatar-image': true, 'selected-avatar': isSelectedAvatar(image.id)}" >
-        </label>
-        </div>
-        <div class="submit">
-            <button>{{ buttonText.submit }}</button>
-        </div>
-        <div v-if="loginError" class="error">{{ loginError }}</div>
-        </form>
-        <div class="submit" v-if="!registerScreen" @click="guestLogin">
-            <button>Log in as a Guest</button>
-        </div>
-    <button @click='changeScreen'>{{ buttonText.change }}</button>
+      <label v-if="registerScreen">Choose your avatar:</label>
+      <div v-if="registerScreen" class="avatar-options">
+      <label v-for="image in imageOptions" :key="image.id">
+          <input
+              type="radio"
+              :value="image.id"
+              v-model="userData.avatar"
+              required
+          >
+          <img :src="image.src" alt="Avatar" :class="{'avatar-image': true, 'selected-avatar': isSelectedAvatar(image.id)}" >
+      </label>
+      </div>
+      <div>
+          <button>{{ buttonText.submit }}</button>
+      </div>
+      <div v-if="loginError" class="error">{{ loginError }}</div>
+    </form>
+    <div class="outside" v-if="!registerScreen" @click="guestLogin">
+        <button>Log in as a Guest</button>
+    </div>
+    <div class="outside" @click="changeScreen">
+      <button>{{ buttonText.change }}</button>
+    </div>
+  </div>
+
+</div>
 </template>
 
 <script>
@@ -62,9 +69,9 @@ export default {
         const registerScreen = ref(false);
         const buttonText = ref({
             submit: 'Log in',
-            change: 'Register new Account instead'
+            change: 'Register new user instead'
         });
-
+        const header = ref('Log in to Forum app')
         // Handle avatar choice
         const isSelectedAvatar = computed(() => (imageId) => {
             return userData.value.avatar === imageId;
@@ -82,13 +89,15 @@ export default {
             passwordError.value = '';
             loginError.value = '';
             if (!registerScreen.value) {
-                buttonText.value.change = 'Register new Account instead';
+                buttonText.value.change = 'Register new user instead';
                 buttonText.value.submit = 'Log in';
+                header.value = 'Log in to Forum app';
                 userData.value.newuser= false;
             } else {
-                buttonText.value.change = 'Use existing Account instead';
-                buttonText.value.submit = 'Create an Account';
-                userData.value.newuser= true;
+                buttonText.value.change = 'Use existing user account instead';
+                buttonText.value.submit = 'Register new user';
+                header.value = 'Register new user';
+                userData.value.newuser= true;    
             };
 
         };
@@ -138,6 +147,7 @@ export default {
             loginError,
             registerScreen,
             buttonText,
+            header,
             // functions
             signupUser,
             handleSubmit,
@@ -150,14 +160,36 @@ export default {
 </script>
 
 <style scoped>
+.container {
+  display: grid;
+  align-items: center;
+  gap: 10px;
+  height: 90vh;
+  margin: 20px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+h2 {
+    text-transform: uppercase;
+    padding: 20px;
+    margin-top: -20px;
+}
+
 form {
-    max-width: 420px;
+    width: 420px;
     margin: 30px auto;
     background: #323232;
     text-align: left;
     padding: 40px;
     border-radius: 10px;
 }
+
 label {
     color: white;
     display: inline-block;
@@ -165,17 +197,25 @@ label {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
+
 input, select {
     display: block;
     padding: 10px 6px;
     width: 100%;
     box-sizing: border-box;
 }
+
 button {
     padding: 10px 20px;
     margin-top: 20px;
     border-radius: 20px;
 }
+
+.outside {
+    margin-top: -25px;
+    margin-bottom: 20px;
+}
+
 .error {
     color: #FFADAD;
     margin-top: 10px;
