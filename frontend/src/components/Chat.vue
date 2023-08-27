@@ -3,9 +3,9 @@
     <div class="chat-name">{{ chatName.replace(/@/g, ' - ') || "Not in conversation" }}</div>
     <div class="chat-container">
         <div class="message" v-for="message in localChatData" :key="message.id">
-            <img :src="require('../assets/images/profile' + message.avatar + '.png')">
             <div class="header">
                 <div class="sender">{{ message.sender }}</div>
+                <img :src="require('../assets/images/profile' + message.avatar + '.png')">
                 <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
             </div>
             <div class="content">{{ message.content }}</div>
@@ -97,12 +97,11 @@ button {
 }
 
 img {
-    width: 42px;
-    height: 42px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     border: 1px solid black;
-    margin-top: -26px;
-    margin-left: -26px;
+    margin-top: -30px;
 }
 
 .chat-name {
@@ -111,11 +110,11 @@ img {
     border: 1px solid black;
     margin-top: -1px;
     padding: 10px;
-    border-radius: 10px;
     font-weight: 600;
     text-transform: uppercase;
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     font-size: 120%;
 }
@@ -128,9 +127,8 @@ img {
     width: 50%;
     left: 50%;
     transform: translate(-50%);
-    padding: 10px;
-    width: calc(100% - 700px);
-    min-width: 400px;
+    margin: 10px auto;
+    width: calc(100% - 600px);
     max-width: 1000px;
 }
 
@@ -155,7 +153,7 @@ textarea {
     justify-content: center;
     margin-top: 45px;
     margin-bottom: 80px;
-    height: 100%;
+    width: 100%;
     color: white;
     overflow-wrap: break-word;
     overflow-y: auto;
@@ -165,29 +163,30 @@ textarea {
     background: #404040;
     padding: 10px;
     margin-top: 30px;
-    width: calc(100% - 700px);
-    min-width: 300px;
+    width: calc(100% - 40px);
     border-radius: 20px;
     text-align: left;
     white-space: pre-wrap;
+    text-align: center;
 }
 
 .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     color: #DDD0C8;
-    margin-top: -10px;
+    width: 100%;
 }
 
 .sender {
     font-weight: 600;
     text-transform: uppercase;
-    margin-left: 20px;
+    width: calc(100% - 130px);
 }
 
 .content {
     margin-top: 20px;
     margin-bottom: 5px;
+    text-align: left;
 }
 
 .users-typing {

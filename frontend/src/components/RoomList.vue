@@ -32,6 +32,7 @@ export default {
 
     const toggleSidebar = () => {
       isHidden.value = !isHidden.value;
+      emit('toggleSidebar');
     };
 
     const roomChange = (name) => {

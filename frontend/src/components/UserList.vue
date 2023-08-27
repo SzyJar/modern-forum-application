@@ -22,13 +22,13 @@ import User from './User.vue'
 
 export default {
     props: ['users','currentUser', 'chatName'],
-    emits: ['logOut', 'roomChange'],
     components: { CurrentUser, User },
     setup(props, { emit }) {
         const isHidden = ref(false);
 
         const toggleSidebar = () => {
             isHidden.value = !isHidden.value;
+            emit('toggleSidebar');
         };
 
         const logOut = () => {

@@ -7,21 +7,25 @@
     <SignIn @success="loggedIn" />
   </div>
   <div v-else>
+    <div class="chat-component" :style="{ marginLeft: middleMarginLeft, marginRight: middleMarginRight }">
     <Chat :chatName="chat.name"
           :chatData="chat.data"
           :currentUser="currentUser"
           :usersTyping="usersTyping"
           @sendMessage="sendMessage"
           @typing="typing" />
+    </div>
     <RoomList :rooms="rooms"
               @roomChange="roomChange" 
               @createNewRoom="createNewRoomWindow"
-              @getRooms="getRooms" />
+              @getRooms="getRooms"
+              @toggleSidebar="toggleLeft" />
     <UserList :users="users" 
               :currentUser="currentUser" 
               :chatName="chat.name" 
               @logOut="logOut"
-              @roomChange="roomChange" />
+              @roomChange="roomChange"
+              @toggleSidebar="toggleRight" />
   </div>
   <div v-if="showCreateWindow">
     <CreateRoom @done="createNewRoom" />
@@ -63,6 +67,24 @@ export default {
     });
 
     const rooms = ref(null);
+
+    const middleMarginLeft = ref('280px');
+    const middleMarginRight = ref('280px');
+    const toggleRight = () => {
+      if (middleMarginRight.value === '280px') {
+        middleMarginRight.value = '30px';
+      } else {
+        middleMarginRight.value = '280px';
+      }
+    }
+
+    const toggleLeft = () => {
+      if (middleMarginLeft.value === '280px') {
+        middleMarginLeft.value = '30px';
+      } else {
+        middleMarginLeft.value = '280px';
+      }
+    }
 
     // Check if server is up
     const connected = ref(false);
@@ -253,6 +275,8 @@ export default {
       rooms,
       usersTyping,
       connected,
+      middleMarginLeft,
+      middleMarginRight,
       // functions
       loggedIn,
       logOut,
@@ -262,13 +286,21 @@ export default {
       getRooms,
       typing,
       checkServer,
-      createNewRoomWindow
+      createNewRoomWindow,
+      toggleRight,
+      toggleLeft
     }
   },
 }
 </script>
 
 <style>
+@media (max-width: 800px) {
+  body {
+    zoom: 0.7;
+  }
+}
+
 ::-webkit-scrollbar {
   width: 0px;
   height: 0px;
@@ -286,6 +318,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+}
+
+.chat-component {
+  transition: margin 0.3s ease;
 }
 
 .sideBar {
