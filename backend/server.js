@@ -55,10 +55,6 @@ const s = socket(server, {
 // Store active users, list is exposed to clients
 const userList = [];
 
-// Store user id for private chat routing, list is server only
-const userIDs = [];
-
-
 s.sockets.on('connect', (socket) => {
     console.log(`\x1b[32mNew client connected!\x1b[0m\nClient ID: ${socket.id}\n`);
     let user = '';
