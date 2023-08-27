@@ -1,6 +1,8 @@
 <template>
 <div class="sideBar" :class="{ 'sideBar-hidden': isHidden }">
-    <button class="toggle-button" @click="toggleSidebar">{{ isHidden ? '>>' : '<<' }}</button>
+    <button class="toggle-button" @click="toggleSidebar">
+      <i class="fa-solid" :class="{ 'fa-arrow-right': isHidden, 'fa-arrow-left': !isHidden }"></i>
+    </button>
     <div class="rooms">
         <h2>Conversations</h2>
         <div class="room" v-for="room in rooms" :key="room.id" @click="roomChange(room.name)">
@@ -66,7 +68,7 @@ export default {
 
 .toggle-button {
     align-self: flex-end;
-    margin-right: -35px;
+    margin-right: -30px;
 }
 
 .rooms {

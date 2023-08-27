@@ -1,6 +1,8 @@
 <template>
 <div class="sideBar" :class="{ 'sideBar-hidden': isHidden }">
-    <button class="toggle-button" @click="toggleSidebar">{{ isHidden ? '<<' : '>>' }}</button>
+    <button class="toggle-button" @click="toggleSidebar">
+      <i class="fa-solid" :class="{ 'fa-arrow-left': isHidden, 'fa-arrow-right': !isHidden }"></i>
+    </button>
     <CurrentUser :currentUser="currentUser" :chatName="chatName" @logOut="logOut" />
     <div class="users-online">
         <h2>Active users</h2>
@@ -61,7 +63,7 @@ export default {
 
 .toggle-button {
     align-self: flex-start;
-    margin-left: -35px;
+    margin-left: -30px;
 }
 
 .users-online {
