@@ -197,7 +197,7 @@ textarea {
     align-items: left;
     text-align: left;
     margin-top: 10px;
-    width: calc(100% - 700px);
+    width: calc(100% - 40px);
 }
 
 .user-typing {
