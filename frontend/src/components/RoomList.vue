@@ -5,7 +5,7 @@
     </button>
     <div class="rooms">
         <div class='room' @click="CreateRoom">
-          <Room :room="{ name: 'Create new room' }" icon='<i class="fa-solid fa-comment-medical"></i>' />
+          <Room :room="{ name: 'Create public chat' }" icon='<i class="fa-solid fa-comment-medical"></i>' />
         </div>
         <h2>Conversations</h2>
         <div class="room" v-for="room in rooms" :key="room.id" @click="roomChange(room.name)">
@@ -33,6 +33,7 @@ export default {
     const toggleSidebar = () => {
       isHidden.value = !isHidden.value;
     };
+
     const roomChange = (name) => {
       emit('roomChange', name);
     };

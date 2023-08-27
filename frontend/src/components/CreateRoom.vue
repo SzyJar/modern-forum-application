@@ -24,7 +24,7 @@ export default {
 
         const handleSubmit = async () => {
             try {
-                const responsePostRoom = await axios.post(process.env.VUE_APP_API_URL + 'chat/' + chatName.value, { icon: 1 });
+                const responsePostRoom = await axios.post(process.env.VUE_APP_API_URL + 'chat/' + chatName.value);
             } catch (error) {
                 console.log(error);
             };

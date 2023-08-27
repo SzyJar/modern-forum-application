@@ -55,6 +55,7 @@ export default {
     })
 
     const showCreateWindow = ref(false);
+    const inPrivateChat = ref(false);
 
     const chat = ref({
       data: null,
@@ -118,19 +119,50 @@ export default {
     };
 
     // Change room (load chat log)
-    const roomChange = async (data) => {
-      try {
-        const response = await axios.get(process.env.VUE_APP_API_URL + 'chat/' + data);
-        chat.value.data = response.data;
-        chat.value.name = data;
-        s.emit('room-change', data);
-      } catch (error) {
+    const roomChange = async (data, isPrivate=false) => {
+      if (!isPrivate) {
+        try {
+          const response = await axios.get(process.env.VUE_APP_API_URL + 'chat/' + data);
+          chat.value.data = response.data;
+          chat.value.name = data;
+          s.emit('room-change', data);
+          inPrivateChat.value = (false);
+        } catch (error) {
+          console.log(error);
+        };
+      } else {
+        // private chat
+        const users = [currentUser.value.name, data].sort();
+        const chatName = users[0] + '@' + users[1] + '@private';
+        try {
+          const response = await axios.get(process.env.VUE_APP_API_URL
+                                          + 'chat/' + chatName )
+          chat.value.data = response.data;
+          chat.value.name = chatName;
+          s.emit('room-change', null);
+          inPrivateChat.value = (true);
+        } catch(error) {
         if (error.response && error.response.status === 401) {
           logOut();
+        } else if (error.response && error.response.status === 404) {
+          // Create new chat room
+          try {
+            const responsePostRoom = await axios.post(process.env.VUE_APP_API_URL + 'chat/'
+                                                      + data, { users: users });
+            const response = await axios.get(process.env.VUE_APP_API_URL
+                                            + 'chat/' + chatName )
+            chat.value.data = response.data;
+            chat.value.name = chatName;
+            s.emit('room-change', null);
+            inPrivateChat.value = (true);
+          } catch (error) {
+            console.log(error);
+          };
         } else {
           console.log(error);
         };
-      };
+        }
+      }
     };
 
     // Send new message

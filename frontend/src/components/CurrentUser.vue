@@ -2,7 +2,7 @@
   <div class="currentUser">
     <img :src="require('../assets/images/profile' + currentUser.avatar + '.png')">
     <p>Loged in as: {{ currentUser.name }}</p>
-    <p v-if="chatName">Current chat: {{ chatName }}</p>
+    <p v-if="chatName">{{ chatName.replace(/@/g, ' - ') }}</p>
     <p v-else>Not in conversation</p>
     <button @click="logOut" class="logout">LOG OUT</button>
   </div>

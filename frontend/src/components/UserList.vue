@@ -7,7 +7,7 @@
     <div class="users-online">
         <h2>Active users</h2>
         <div v-for="user in users" :key="user.id">
-            <div class="user" v-if="user.name !== currentUser.name" @click="roomChange(user.room)">
+            <div class="user" v-if="user.name !== currentUser.name" @click="roomChange(user.name)">
                 <User :user="user" />
             </div>
         </div>
@@ -37,7 +37,7 @@ export default {
 
         const roomChange = (name) => {
             if (name){
-                emit('roomChange', name);
+                emit('roomChange', name, true);
             };
         };
 

@@ -87,7 +87,6 @@ module.exports = function (app) {
     .post(auth, async function(req, res) {
         const name = req.params.chatname;
         const content = req.body.content;
-
         try {
             const chat = await Chat.findOne({ name: name });
             
@@ -125,10 +124,13 @@ module.exports = function (app) {
             const nameList = [];
             const allChats = await Chat.find({});
             for (const chat of allChats) {
-                nameList.push({
+              // Ignore private chats
+                if (chat.users.length === 0) {
+                  nameList.push({
                     name: chat.name,
                     icon: chat.icon,
-                });
+                  });
+                }
             };
 
             return res.json(nameList);
@@ -161,26 +163,27 @@ module.exports = function (app) {
     })
     // Create new chat
     .post(auth, async function(req, res) {
-        const name = req.params.chatname;
-        const icon = req.body.icon;
-        const isPrivate = req.body.isPrivate;
-        const users = req.body.users;
-
+        // Do not allow '@' in chat name
+        // '@' is reserved for private chat naming
+        let name = req.params.chatname.replace(/@/g, '');
+        let users = req.body.users;
+        const userIds = [];
         try {
-            const chat = await Chat.findOne({ name: name });
-            const userIds = []
-    
-            if(isPrivate) {
-                for (const user of users) {
-                    const userPromise = await User.findOne({ name: user });
-                    userIds.push(userPromise._id);
-                };
+            if(users && users.length > 0) {
+              for (const user of users) {
+                  const userPromise = await User.findOne({ name: user });
+                  userIds.push(userPromise._id);
+              };
+              // Generate easy to access chat name by user name
+              users.sort();
+              name = users[0] + '@' + users[1] + '@private';
             };
+        
+            const chat = await Chat.findOne({ name: name });
     
             if(!chat) {
                 const newChat = new Chat({
                     name: name,
-                    icon: icon,
                     users: userIds,
                 });
                 await newChat.save();

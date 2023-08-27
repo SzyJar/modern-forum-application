@@ -52,8 +52,12 @@ const s = socket(server, {
       }
 });
 
-// Store active users
+// Store active users, list is exposed to clients
 const userList = [];
+
+// Store user id for private chat routing, list is server only
+const userIDs = [];
+
 
 s.sockets.on('connect', (socket) => {
     console.log(`\x1b[32mNew client connected!\x1b[0m\nClient ID: ${socket.id}\n`);
@@ -64,9 +68,9 @@ s.sockets.on('connect', (socket) => {
         const index = userList.findIndex((item) => item.name === user);
         if (index === -1){
             userList.push({
-                name: user,
-                avatar: avatar,
-                room: null
+              name: user,
+              avatar: avatar,
+              room: null
             });
         };
         socket.broadcast.emit('user-list-updated', userList);
@@ -94,6 +98,7 @@ s.sockets.on('connect', (socket) => {
     });
 
     socket.on('new-message', (message, room, target=null) => {
+
       if(target) {
         io.to(target).emit('message', message, room);
       } else {

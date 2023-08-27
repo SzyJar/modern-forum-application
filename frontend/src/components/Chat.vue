@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="chat-name">{{ chatName || "Not in conversation" }}</div>
+    <div class="chat-name">{{ chatName.replace(/@/g, ' - ') || "Not in conversation" }}</div>
     <div class="chat-container">
         <div class="message" v-for="message in localChatData" :key="message.id">
             <img :src="require('../assets/images/profile' + message.avatar + '.png')">
@@ -97,12 +97,12 @@ button {
 }
 
 img {
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     border: 1px solid black;
-    margin-top: -24px;
-    margin-left: -24px;
+    margin-top: -26px;
+    margin-left: -26px;
 }
 
 .chat-name {
