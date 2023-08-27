@@ -10,7 +10,7 @@ https://replit.com/@RedGlimmer/modern-forum-app
 User authentication is done using express-session.
 If you are having trouble logging in or registering, please make sure your browser allows third-party cookies.
 
-# Functions available in the application
+# Functionality available in the application
 
 Create new room, or join exisitng one and chat with people online.
 * Real-time user status handled via WebSocket connection
