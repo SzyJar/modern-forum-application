@@ -55,6 +55,9 @@ const s = socket(server, {
 // Store active users, list is exposed to clients
 const userList = [];
 
+// Store active user socket id, list is server only
+const userIds = [];
+
 s.sockets.on('connect', (socket) => {
     console.log(`\x1b[32mNew client connected!\x1b[0m\nClient ID: ${socket.id}\n`);
     let user = '';
@@ -67,6 +70,10 @@ s.sockets.on('connect', (socket) => {
               name: user,
               avatar: avatar,
               room: null
+            });
+            userIds.push({
+              name: user,
+              id: socket.id
             });
         };
         socket.broadcast.emit('user-list-updated', userList);
@@ -93,10 +100,17 @@ s.sockets.on('connect', (socket) => {
         socket.broadcast.emit('typing', room, user);
     });
 
-    socket.on('new-message', (message, room, target=null) => {
-
-      if(target) {
-        io.to(target).emit('message', message, room);
+    socket.on('new-message', (message, room) => {
+      if(room.includes('@')) {
+        const names = room.split('@');
+        names.pop();
+        const user1 = userIds.find(user => user.name === names[0]);
+        const user2 = userIds.find(user => user.name === names[1]);
+        if(user1.id === socket.id) {
+          socket.to(user2.id).emit('new-message', message, room);
+        } else {
+          socket.to(user1.id).emit('new-message', message, room);
+        };
       } else {
         socket.broadcast.emit('new-message', message, room);
       }   
@@ -112,6 +126,7 @@ s.sockets.on('connect', (socket) => {
         const index = userList.findIndex((item) => item.name === user);
         if (index !== -1){
             userList.splice(index, 1);
+            userIds.splice(index, 1);
         };
         socket.broadcast.emit('user-list-updated', userList);
     });

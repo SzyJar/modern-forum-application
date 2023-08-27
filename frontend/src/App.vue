@@ -231,7 +231,7 @@ export default {
       if(room === chat.value.name) {
         if(message === null) {
           // If no message reload chat
-          //roomChange(chat.value.name);
+          // roomChange(chat.value.name);
         } else {
           chat.value.data.push(message)
         }   
