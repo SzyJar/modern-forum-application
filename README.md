@@ -1,7 +1,8 @@
+[![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=white)](#) [![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](#) [![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=white)](#) [![Socket.io](https://img.shields.io/badge/Socket.io-black?style=for-the-badge&logo=socket.io&badgeColor=white)](#) [![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)](#)
 # Forum application
 
 ## Visit https://szyjar.github.io/modern-forum-application/ for live project.<br>
-(Waking up the replit may take a few seconds.)
+(Waking up the replit server may take a few seconds.)
 
 Backend is hosted on replit.com
 https://replit.com/@RedGlimmer/modern-forum-app
@@ -9,18 +10,19 @@ https://replit.com/@RedGlimmer/modern-forum-app
 User authentication is done using express-session.
 If you are having trouble logging in or registering, please make sure your browser allows third-party cookies.
 
-#
+# Functions available in the application
 
-Client sends request with axios to API hosted on replit.com, server performs operations on Mongo database and returns information to client. In addition,
-a web socket connection is established between clients and server to handle client status. Other clients can see who is in which chat room and who is typing. <br><br>
-When user makes request to modify database (make new chat room, send message) server makes changes in database accordingly and sends information to other clients that a change has been made.
+Create new room, or join exisitng one and chat with people online.
+* Real-time user status handled via WebSocket connection
+* All messages are stored in a Mongo database
+* Private chat with users online
 
-![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/74cdba3d-122c-4a4a-9277-a9f49f9ce342)
+![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/6c11477a-11ea-446e-99fb-63fe66d97061)
 
-
-Clicking on the conversation or user will take the client to the specified chat room.
-The client can see who is typing and who is present in a conversation.
-Creating a new conversation is done in the pop-up window that appears after pressing the "Create New Room" button.
+* Clicking on the conversation will take the client to the specified chat room
+* Clicking on the active user will take the client to the private chat
+* The client can see who is typing and who is present in a conversation
+* Creating a new conversation is done in the pop-up window that appears after pressing the "Create public chat" button
 
 # API Endpoints
 ## Login or register
