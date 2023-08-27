@@ -34,8 +34,8 @@ Creating a new conversation is done in the pop-up window that appears after pres
   "avatar": 3
 }
 ```
-"avatar" avatar number (1-5) - Only used for registering new user<br>
-"newuser" false: login, true: register
+"newuser" false: login, true: register<br>
+"avatar" avatar number (1-5) - Only used for registering new user.
 ## Logout
 - Method: `POST`
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/logout`
