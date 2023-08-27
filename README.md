@@ -29,9 +29,9 @@ Creating a new conversation is done in the pop-up window that appears after pres
 ```json
 {
   "name": "your_username",
-  "avatar": 3, 
   "password": "your_password",
-  "newuser": false 
+  "newuser": false,
+  "avatar": 3
 }
 ```
 "avatar" avatar number (1-5) - Only used for registering new user<br>
@@ -53,7 +53,7 @@ Session cookie is required
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
-  "content": "message_content",
+  "content": "message_content"
 }
 ```
 ## Make new chat room
@@ -62,9 +62,7 @@ Session cookie is required
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
-  "isPrivate": false,
-  "users": ["user._id", "user._id"]
+  "users": ["user_name", "user_name"]
 }
 ```
-For private chat, set isPrivate to true.<br>
-Users array contains users allowed to enter chat room.
+Users array contains users allowed to enter chat room. Leave empty for public chat.
