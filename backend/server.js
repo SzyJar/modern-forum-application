@@ -93,10 +93,15 @@ s.sockets.on('connect', (socket) => {
         socket.broadcast.emit('typing', room, user);
     });
 
-    socket.on('new-message', (room) => {
-        socket.broadcast.emit('new-message', room);
+    socket.on('new-message', (message, room, target=null) => {
+      if(target) {
+        io.to(target).emit('message', message, room);
+      } else {
+        socket.broadcast.emit('new-message', message, room);
+      }   
     });
 
+    // Client created new room, tell other clients to update room list
     socket.on('room-update', () => {
         socket.broadcast.emit('room-update');
     }); 

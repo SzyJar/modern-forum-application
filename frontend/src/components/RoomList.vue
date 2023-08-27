@@ -4,12 +4,12 @@
       <i class="fa-solid" :class="{ 'fa-arrow-right': isHidden, 'fa-arrow-left': !isHidden }"></i>
     </button>
     <div class="rooms">
+        <div class='room' @click="CreateRoom">
+          <Room :room="{ name: 'Create new room' }" icon='<i class="fa-solid fa-comment-medical"></i>' />
+        </div>
         <h2>Conversations</h2>
         <div class="room" v-for="room in rooms" :key="room.id" @click="roomChange(room.name)">
             <Room :room="room" icon="<i class='fa-solid fa-comment-dots'></i>" />
-        </div>
-        <div class='room' @click="CreateRoom">
-          <Room :room="{ name: 'Create new room' }" icon='<i class="fa-solid fa-comment-medical"></i>' />
         </div>
     </div>
 </div>

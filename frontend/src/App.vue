@@ -137,7 +137,7 @@ export default {
     const sendMessage = async (data) => {
       try {
         const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, { content: data });
-        s.emit('new-message', chat.value.name);
+        s.emit('new-message', chat.value.data[chat.value.data.length - 1], chat.value.name);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           logOut();
@@ -172,11 +172,15 @@ export default {
       getRooms();
     };
     
-
     // Handle socket io logic
-    s.on('new-message', (room) => {
-      if(room == chat.value.name) {
-        roomChange(chat.value.name);
+    s.on('new-message', (message=null, room) => {
+      if(room === chat.value.name) {
+        if(message === null) {
+          // If no message reload chat
+          //roomChange(chat.value.name);
+        } else {
+          chat.value.data.push(message)
+        }   
       };
     });
 
