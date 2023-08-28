@@ -32,9 +32,6 @@
       </div>
       <div v-if="loginError" class="error">{{ loginError }}</div>
     </form>
-    <div class="outside" v-if="!registerScreen" @click="guestLogin">
-        <button>Log in as a Guest</button>
-    </div>
     <div class="outside" @click="changeScreen">
       <button>{{ buttonText.change }}</button>
     </div>
@@ -51,9 +48,9 @@ export default {
     emits: ['success'],
     setup(props, { emit }){
         const userData = ref({
-            name: '',
+            name: 'Guest',
             avatar: 1,
-            password: '',
+            password: 'Guest',
             newuser: false
         });
         const imageOptions = [
@@ -116,16 +113,6 @@ export default {
             };
         };
 
-        const guestLogin = () => {
-            const guestData = {
-                name: 'Guest',
-                password: 'Guest',
-                avatar: 1,
-                newuser: false
-            };
-            signupUser(guestData);
-        };
-
         const handleSubmit = () => {
             if (registerScreen.value && userData.value.password.length <= 4) {
                 passwordError.value = 'Passwords should be more than 4 characters long';
@@ -153,7 +140,6 @@ export default {
             handleSubmit,
             changeScreen,
             isSelectedAvatar,
-            guestLogin
         };
     },
 }
