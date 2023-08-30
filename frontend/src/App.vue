@@ -265,16 +265,15 @@ export default {
       s.emit('typing', chat.value.name);
     };
 
-    let presentTyping = null
     let absentTyping = null
     s.on('typing', (room, user) => {
       if(room === chat.value.name) {
-        clearTimeout(presentTyping);
         if (usersTyping.value.indexOf(user) === -1) {
           usersTyping.value.push(user);
           // Remove user after 3 seconds
-          presentTyping = setTimeout(() => {
+          setTimeout(() => {
             const indexToRemove = usersTyping.value.indexOf(user);
+            console.log(indexToRemove)
             if (indexToRemove !== -1) {
               usersTyping.value.splice(indexToRemove, 1);
             }
