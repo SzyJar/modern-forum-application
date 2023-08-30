@@ -81,10 +81,14 @@ s.sockets.on('connect', (socket) => {
     });
 
     socket.on('logout', () => {
-        const index = userList.findIndex((item) => item.name === user);
+        let index = userList.findIndex((item) => item.name === user);
         if (index !== -1){
             userList.splice(index, 1);
         };
+        index = userIds.findIndex((item) => item.name === user);
+        if (index !== -1) {
+          userIds.splice(index, 1);
+        }
         socket.broadcast.emit('user-list-updated', userList);
     });
 
@@ -107,9 +111,9 @@ s.sockets.on('connect', (socket) => {
         const user1 = userIds.find(user => user.name === names[0]);
         const user2 = userIds.find(user => user.name === names[1]);
         if(user1.id === socket.id) {
-          socket.to(user2.id).emit('new-message', message, room);
+          socket.to(user2.id).emit('new-message', message, room, user1.name);
         } else {
-          socket.to(user1.id).emit('new-message', message, room);
+          socket.to(user1.id).emit('new-message', message, room, user2.name);
         };
       } else {
         socket.broadcast.emit('new-message', message, room);
@@ -123,11 +127,14 @@ s.sockets.on('connect', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`\x1b[31mClient disconnected!\x1b[0m\nClient ID: ${socket.id}\n`);
-        const index = userList.findIndex((item) => item.name === user);
+        let index = userList.findIndex((item) => item.name === user);
         if (index !== -1){
             userList.splice(index, 1);
-            userIds.splice(index, 1);
         };
+        index = userIds.findIndex((item) => item.name === user);
+        if (index !== -1) {
+          userIds.splice(index, 1);
+        }
         socket.broadcast.emit('user-list-updated', userList);
     });
 });

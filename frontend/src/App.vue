@@ -185,6 +185,11 @@ export default {
         };
         }
       }
+      // hide notifications
+      const foundUser = users.value.find(obj => obj.name === data);
+      if (foundUser) {
+        foundUser.notification = false;
+      }
     };
 
     // Send new message
@@ -227,14 +232,20 @@ export default {
     };
     
     // Handle socket io logic
-    s.on('new-message', (message=null, room) => {
+    s.on('new-message', (message=null, room, sender=null) => {
       if(room === chat.value.name) {
         if(message === null) {
           // If no message reload chat
           // roomChange(chat.value.name);
         } else {
           chat.value.data.push(message)
-        }   
+        }
+      } else {
+        // inform user about new private message
+        const foundUser = users.value.find(obj => obj.name === sender);
+        if (foundUser) {
+          foundUser.notification = true;
+        }
       };
     });
 
