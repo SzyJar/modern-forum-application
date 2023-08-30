@@ -88,7 +88,6 @@ export default {
     height: 60px;
     border-radius: 10px;
     transition: transform 0.1s ease;
-    overflow-wrap: break-word;
 }
 
 .room:hover{

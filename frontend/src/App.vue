@@ -233,9 +233,15 @@ export default {
     
     // Handle socket io logic
     s.on('new-message', (message=null, room, sender=null) => {
+      // push new message in public chat
+      const foundChat = rooms.value.find(obj => obj.name === room);
+      if (foundChat) {
+        foundChat.message = message.content;
+      }
+
       if(room === chat.value.name) {
         if(message === null) {
-          // If no message reload chat
+          // if no message reload chat
           // roomChange(chat.value.name);
         } else {
           chat.value.data.push(message)
@@ -258,17 +264,32 @@ export default {
     const typing = () => {
       s.emit('typing', chat.value.name);
     };
+
+    let presentTyping = null
+    let absentTyping = null
     s.on('typing', (room, user) => {
-        if(room === chat.value.name && usersTyping.value.indexOf(user) === -1) {
+      if(room === chat.value.name) {
+        clearTimeout(presentTyping);
+        if (usersTyping.value.indexOf(user) === -1) {
           usersTyping.value.push(user);
           // Remove user after 3 seconds
-          setTimeout(() => {
+          presentTyping = setTimeout(() => {
             const indexToRemove = usersTyping.value.indexOf(user);
             if (indexToRemove !== -1) {
               usersTyping.value.splice(indexToRemove, 1);
             }
           }, 3000);
-        };
+        }
+      } else {
+        const foundChat = rooms.value.find(obj => obj.name === room);
+        if (foundChat) {
+          foundChat.message = user + ' typing...';
+          clearTimeout(absentTyping);
+          absentTyping = setTimeout(() => {
+            foundChat.message = ''
+          }, 3000);
+        }
+      }
     });
     
     // Show who is active
