@@ -5,7 +5,7 @@
         <div class="message" v-for="message in localChatData" :key="message.id">
             <div class="header">
                 <div class="sender">{{ message.sender }}</div>
-                <img :src="require('../assets/images/profile' + message.avatar + '.png')">
+                <img :src="require('../assets/images/profile' + message.avatar + '.jpg')">
                 <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
             </div>
             <div class="content">{{ message.content }}</div>

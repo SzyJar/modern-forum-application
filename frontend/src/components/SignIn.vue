@@ -54,11 +54,11 @@ export default {
             newuser: false
         });
         const imageOptions = [
-            { id: 1, src: require('../assets/images/profile1.png') },
-            { id: 2, src: require('../assets/images/profile2.png') },
-            { id: 3, src: require('../assets/images/profile3.png') },
-            { id: 4, src: require('../assets/images/profile4.png') },
-            { id: 5, src: require('../assets/images/profile5.png') },
+            { id: 1, src: require('../assets/images/profile1.jpg') },
+            { id: 2, src: require('../assets/images/profile2.jpg') },
+            { id: 3, src: require('../assets/images/profile3.jpg') },
+            { id: 4, src: require('../assets/images/profile4.jpg') },
+            { id: 5, src: require('../assets/images/profile5.jpg') },
         ];
         const password2 = ref('');
         const passwordError = ref(null);

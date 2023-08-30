@@ -1,7 +1,7 @@
 <template>
    <div class="container">
     <div class="avatar">
-        <img :src="require('../assets/images/profile' + user.avatar + '.png')" />
+        <img :src="require('../assets/images/profile' + user.avatar + '.jpg')" />
     </div>
     <div class="user">
       <div class="user-content" v-if="user.room">
