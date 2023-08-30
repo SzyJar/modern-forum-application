@@ -295,7 +295,14 @@ export default {
     // Show who is active
     const users = ref([]);
     s.on('user-list-updated', (userlist) => {
+      const oldUserList = [...users.value];
       users.value = userlist;
+      oldUserList.forEach((user) => {
+        const existingUserIndex = users.value.findIndex(existingUser => existingUser.name === user.name);
+        if(user.notification && existingUserIndex !== -1) {
+          users.value[existingUserIndex].notification = true;
+        }
+      })
     });
 
     return {
