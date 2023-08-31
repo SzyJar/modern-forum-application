@@ -17,7 +17,8 @@ Create new room, or join exisitng one and chat with people online.
 * All messages are stored in a Mongo database
 * Private chat with users online
 
-![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/6c11477a-11ea-446e-99fb-63fe66d97061)
+![image](https://github.com/SzyJar/modern-forum-application/assets/107247457/b254ea82-ddac-46c4-9e21-c8166009fb91)
+
 
 * Clicking on the conversation will take the client to the specified chat room
 * Clicking on the active user will take the client to the private chat
