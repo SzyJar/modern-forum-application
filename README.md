@@ -31,7 +31,7 @@ Create new room, or join exisitng one and chat with people online.
   "avatar": 3
 }
 ```
-"newuser" false: login, true: register<br>
+"newuser" false: login, true: register<br/>
 "avatar" avatar number (1-5) - Only used for registering new user.
 ## Logout
 - Method: `POST`
