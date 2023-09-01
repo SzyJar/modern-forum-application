@@ -248,6 +248,7 @@ export default {
         }
       } else {
         // inform user about new private message
+        clearTimeout(absentTyping);
         const foundUser = users.value.find(obj => obj.name === sender);
         if (foundUser) {
           foundUser.notification = true;
