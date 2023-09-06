@@ -47,7 +47,7 @@ Session cookie is required
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ## Send message
 Session cookie is required
-- Method: `Post`
+- Method: `POST`
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
@@ -56,7 +56,7 @@ Session cookie is required
 ```
 ## Edit your message
 Session cookie is required
-- Method: `Put`
+- Method: `PUT`
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
@@ -66,7 +66,7 @@ Session cookie is required
 ```
 ## Delete your message
 Session cookie is required
-- Method: `Delete`
+- Method: `DELETE`
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
