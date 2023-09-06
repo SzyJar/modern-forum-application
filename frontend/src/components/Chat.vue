@@ -2,13 +2,28 @@
 <div>
     <div class="chat-name">{{ chatName.replace(/@/g, ' - ') || "Not in conversation" }}</div>
     <div class="chat-container">
-        <div class="message" v-for="message in localChatData" :key="message.id">
+        <div class="message" v-for="message in localChatData" :key="message._id">
             <div class="header">
                 <div class="sender">{{ message.sender }}</div>
                 <img :src="require('../assets/images/profile' + message.avatar + '.jpg')">
                 <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
             </div>
-            <div class="content">{{ message.content }}</div>
+            <div v-if="!editing.state || message._id !== editing.id" class="content">{{ message.content }}</div>
+            <div v-else class="content">
+                <form @submit.prevent="handleEdit">
+                    <textarea type="text" v-model="editing.data" :disabled="editing.isLocked" required />
+                        <div class="submit">
+                        <button><i class="fa-solid fa-paper-plane send"></i></button>
+                    </div>
+                </form>
+            </div>
+            <div v-if="message.sender === currentUser.name && message.content !== '[DELETED]' && editing.state === false" class="options">
+                <button @click="editMessage(message._id, message.content)"><i class="fa-solid fa-pen"></i></button>
+                <button @click="editMessage(message._id, 'MESSAGE WILL BE DELETED!', locked=true)"><i class="fa-solid fa-trash"></i></button>
+            </div>
+            <div v-if="message.sender === currentUser.name && message.content !== '[DELETED]' && editing.state === true" class="options">
+                <button @click="editMessage(message._id)"><i class="fa-solid fa-xmark"></i></button>
+            </div>
         </div>
         <div class="users-typing">
             <div class="user-typing" v-for="(user, index) in usersTyping" :key="index">
@@ -36,9 +51,15 @@ export default {
         const message = ref('');
         const localChatData = ref([]);
         const messagePrev = ref(null);
+        const editing = ref({
+            id: '',
+            state: false,
+            data: '',
+            isLocked: false
+        });
 
-        watch(() => props.chatData, (newVal) => {
-            localChatData.value = newVal;
+        watch(() => props.chatData, (newValue) => {
+            localChatData.value = newValue;
         });
 
         // watch changes in text ands end emit
@@ -46,6 +67,10 @@ export default {
             if (newValue.trim() !== '') {
                 emit('typing')
             };
+        });
+
+        watch(() => props.chatName, () => {
+            editing.value.state = false
         });
 
         const scrollToBottom = () => {
@@ -72,140 +97,36 @@ export default {
             scrollToBottom();
         };
 
+        const editMessage = (id, data, locked=false) => {
+            editing.value = {
+                id: id,
+                state: !editing.value.state,
+                data: data,
+                isLocked: locked
+            }
+        };
+
+        const handleEdit = () => {
+            emit("handleEdit", editing.value)
+            editing.value = {
+                state: false,
+            }
+        }
+
         onMounted(scrollToBottom);
-        onUpdated(scrollToBottom);
+        onUpdated(scrollToBottom,);
 
         return {
+            editing,
             message,
             localChatData,
             handleSubmit,
+            editMessage,
+            handleEdit
         }
     }
 }
 </script>
 
-<style scoped>
-button {
-    height: 100%;
-    border-radius: 0;
-}
-
-.send{
-    font-size: 190%;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 1px solid black;
-    margin-top: -30px;
-}
-
-.chat-name {
-    color: white;
-    background: #323232;
-    border: 1px solid black;
-    margin-top: -1px;
-    padding: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    font-size: 120%;
-}
-
-.send-container {
-    color: #DDD0C8;
-    background: transparent;
-    position: fixed;
-    bottom: 0;
-    width: 50%;
-    left: 50%;
-    transform: translate(-50%);
-    margin: 10px auto;
-    width: calc(100% - 600px);
-    max-width: 1000px;
-}
-
-form {
-    display: flex;
-}
-
-textarea {
-    display: block;
-    padding: 10px;
-    width: 100%;
-    margin: 1px;
-    box-sizing: border-box;
-    resize: none;
-    outline: none;
-}
-
-.chat-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 45px;
-    margin-bottom: 80px;
-    width: 100%;
-    color: white;
-    overflow-wrap: break-word;
-    overflow-y: auto;
-}
-
-.message {
-    background: #404040;
-    padding: 10px;
-    margin-top: 30px;
-    width: calc(100% - 40px);
-    border-radius: 20px;
-    text-align: left;
-    white-space: pre-wrap;
-    text-align: center;
-}
-
-.header {
-    display: flex;
-    justify-content: center;
-    color: #DDD0C8;
-    width: 100%;
-}
-
-.sender {
-    font-weight: 600;
-    text-transform: uppercase;
-    width: calc(100% - 130px);
-}
-
-.content {
-    margin-top: 20px;
-    margin-bottom: 5px;
-    text-align: left;
-}
-
-.users-typing {
-    display: flex;
-    flex-direction: row;
-    justify-content: left;
-    flex-wrap: wrap;
-    align-items: left;
-    text-align: left;
-    margin-top: 10px;
-    width: calc(100% - 40px);
-}
-
-.user-typing {
-    text-align: left;
-    color: #323232;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-right: 10px;
-};
-
+<style scoped src="@/styles/chat.css">
 </style>

@@ -1,0 +1,128 @@
+button {
+    height: 100%;
+    border-radius: 0;
+}
+
+.options {
+    display: flex;
+    justify-content: right;
+    gap: 10px;
+}
+
+.send{
+    font-size: 190%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid black;
+    margin-top: -30px;
+}
+
+.chat-name {
+    color: white;
+    background: #323232;
+    border: 1px solid black;
+    margin-top: -1px;
+    padding: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-size: 120%;
+}
+
+.send-container {
+    color: #DDD0C8;
+    background: transparent;
+    position: fixed;
+    bottom: 0;
+    width: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    margin: 10px auto;
+    width: calc(100% - 600px);
+    max-width: 1000px;
+}
+
+form {
+    display: flex;
+}
+
+textarea {
+    display: block;
+    padding: 10px;
+    width: 100%;
+    margin: 1px;
+    box-sizing: border-box;
+    resize: none;
+    outline: none;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 45px;
+    margin-bottom: 80px;
+    width: 100%;
+    color: white;
+    overflow-wrap: break-word;
+    overflow-y: auto;
+}
+
+.message {
+    background: #404040;
+    padding: 10px;
+    margin-top: 30px;
+    width: calc(100% - 40px);
+    border-radius: 20px;
+    text-align: left;
+    white-space: pre-wrap;
+    text-align: center;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    color: #DDD0C8;
+    width: 100%;
+}
+
+.sender {
+    font-weight: 600;
+    text-transform: uppercase;
+    width: calc(100% - 130px);
+}
+
+.content {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+.users-typing {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    flex-wrap: wrap;
+    align-items: left;
+    text-align: left;
+    margin-top: 10px;
+    width: calc(100% - 40px);
+}
+
+.user-typing {
+    text-align: left;
+    color: #323232;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-right: 10px;
+};

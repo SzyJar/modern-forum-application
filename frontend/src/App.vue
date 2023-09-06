@@ -13,7 +13,8 @@
           :currentUser="currentUser"
           :usersTyping="usersTyping"
           @sendMessage="sendMessage"
-          @typing="typing" />
+          @typing="typing"
+          @handleEdit="handleEdit" />
     </div>
     <RoomList :rooms="rooms"
               @roomChange="roomChange" 
@@ -194,17 +195,59 @@ export default {
 
     // Send new message
     const sendMessage = async (data) => {
-      try {
-        const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, { content: data });
-        s.emit('new-message', chat.value.data[chat.value.data.length - 1], chat.value.name);
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          logOut();
-        } else {
-          console.log(error);
+        try {
+            const response = await axios.post(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, { content: data });
+            s.emit('new-message', chat.value.data[chat.value.data.length - 1], chat.value.name);
+        } catch (error) {
+            if (error.response && error.response.status === 401) {
+            logOut();
+            } else {
+            console.log(error);
+            };
         };
-      };
+
+        let isPrivate=false;
+        //if(chat.value.name.includes('@')) { isPrivate=true }
+        roomChange(chat.value.name, isPrivate); // Need message ID from server for editing
     };
+
+    // Edit / delete message
+    const handleEdit = async (data) => {
+        if(data.isLocked) {
+            // delete
+            try {
+                const response = await axios.delete(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, {
+                data: { message_id: data.id },
+                });
+                s.emit('new-message', chat.value.data[chat.value.data.length - 1], chat.value.name);
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    logOut();
+                } else {
+                    console.log(error);
+                };
+            }
+        } else {
+            // edit
+            try {
+                const response = await axios.put(process.env.VUE_APP_API_URL + 'message/' + chat.value.name, {
+                    message_id: data.id,
+                    content: data.data
+                });
+                s.emit('new-message', chat.value.data[chat.value.data.length - 1], chat.value.name);
+            } catch (error) {
+                if (error.response && error.response.status === 401) {
+                    logOut();
+                } else {
+                    console.log(error);
+                };
+            }
+        }
+
+        if(!chat.value.name.includes('@')) {
+            roomChange(chat.value.name);
+        };
+    }
 
     // Get all rooms
     const getRooms = async () => {
@@ -233,27 +276,32 @@ export default {
     
     // Handle socket io logic
     s.on('new-message', (message=null, room, sender=null) => {
-      // push new message in public chat
-      const foundChat = rooms.value.find(obj => obj.name === room);
-      if (foundChat) {
-        foundChat.message = message.content;
-      }
+        // push new message in public chat
+        const foundChat = rooms.value.find(obj => obj.name === room);
+        if (foundChat) {
+            foundChat.message = message.id;
+            foundChat.message = message.content;
+        }
 
-      if(room === chat.value.name) {
-        if(message === null) {
-          // if no message reload chat
-          // roomChange(chat.value.name);
+        if(room === chat.value.name) {
+            if(message === null) {
+            // if no message reload chat
+            // roomChange(chat.value.name);
+            } else {
+            chat.value.data.push(message)
+            }
         } else {
-          chat.value.data.push(message)
-        }
-      } else {
-        // inform user about new private message
-        clearTimeout(absentTyping);
-        const foundUser = users.value.find(obj => obj.name === sender);
-        if (foundUser) {
-          foundUser.notification = true;
-        }
-      };
+            // inform user about new private message
+            clearTimeout(absentTyping);
+            const foundUser = users.value.find(obj => obj.name === sender);
+            if (foundUser) {
+            foundUser.notification = true;
+            }
+        };
+
+        if(!chat.value.name.includes('@')) {
+            roomChange(chat.value.name);
+        };
     });
 
     s.on('room-update', () => {
@@ -327,7 +375,8 @@ export default {
       checkServer,
       createNewRoomWindow,
       toggleRight,
-      toggleLeft
+      toggleLeft,
+      handleEdit
     }
   },
 }

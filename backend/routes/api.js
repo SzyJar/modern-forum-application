@@ -117,9 +117,7 @@ module.exports = function (app) {
             console.error('Error occurred in POST request to /message/:chatname', err.message);
             res.status(500).end('An error occurred while creating new message');
         };
-    });
-
-    app.route('/message/:chatname')
+    })
     // Edit a message
     .put(auth, async function(req, res) {
         const name = req.params.chatname;
@@ -158,14 +156,12 @@ module.exports = function (app) {
                 { new: true },
             );
 
-            return res.json(message);
+            return res.json({ message: 'edited'});
         } catch(err) {
             console.error('Error occurred in PUT request to /message/:chatname', err.message);
-            res.status(500).end('An error occurred while editing a message');
+            return res.status(500).end('An error occurred while editing a message');
         };
-    });
-
-    app.route('/message/:chatname')
+    })
     // Delete a message
     .delete(auth, async function(req, res) {
         const name = req.params.chatname;
@@ -203,10 +199,10 @@ module.exports = function (app) {
                 { new: true },
             );
 
-            return res.json(message);
+            return res.json({ message: 'deleted'});
         } catch(err) {
             console.error('Error occurred in DELETE request to /message/:chatname', err.message);
-            res.status(500).end('An error occurred while deleting a message');
+            return res.status(500).end('An error occurred while deleting a message');
         };
     });
 
@@ -229,7 +225,7 @@ module.exports = function (app) {
             return res.json(nameList);
         } catch(err) {
             console.error('Error occurred in GET request to /chat', err.message);
-            res.status(500).end('An error occurred while retrieving chat rooms');
+            return res.status(500).end('An error occurred while retrieving chat rooms');
         };
     });
 
@@ -251,7 +247,7 @@ module.exports = function (app) {
             return res.status(404).end('Chat does not exist');
         } catch(err) {
             console.error('Error occurred in GET request to /chat/:chatname', err.message);
-            res.status(500).end('An error occurred while retrieving messages');
+            return res.status(500).end('An error occurred while retrieving messages');
         };
     })
     // Create new chat
@@ -283,10 +279,10 @@ module.exports = function (app) {
                 return res.status(201).end('created');
             };
     
-            res.status(301).json({ error: 'chat already exist' });
+            return res.status(301).json({ error: 'chat already exist' });
         } catch(err) {
             console.error('Error occurred in POST request to /chat/:chatname', err.message);
-            res.status(500).end('An error occurred while creating new chat');
+            return res.status(500).end('An error occurred while creating new chat');
         };
     });
 
