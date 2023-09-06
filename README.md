@@ -31,9 +31,9 @@ Create new room, or join exisitng one and chat with people online.
   "avatar": 3
 }
 ```
-"newuser" false: login, true: register
+"newuser" - false: login, true: register
 
-"avatar" avatar number (1-5) - Only used for registering new user.
+"avatar" - avatar id (1-5) - Only for registering new user
 ## Logout
 - Method: `POST`
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/logout`
@@ -47,11 +47,30 @@ Session cookie is required
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ## Send message
 Session cookie is required
-- Method: `Post`
+- Method: `POST`
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
   "content": "message_content"
+}
+```
+## Edit your message
+Session cookie is required
+- Method: `PUT`
+- Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
+```json
+{
+  "message_id": "id",
+  "content": "message_content"
+}
+```
+## Delete your message
+Session cookie is required
+- Method: `DELETE`
+- Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
+```json
+{
+  "message_id": "id"
 }
 ```
 ## Make new chat room
