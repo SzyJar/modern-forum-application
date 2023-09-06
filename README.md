@@ -11,6 +11,7 @@ Create new room, or join exisitng one and chat with people online.
 * All messages are stored in a Mongo database
 * Private chat with users online
 * Get notified of new private messages
+* Edit or delete your messages
 * Clicking on the conversation will take the client to the specified public chat room
 * Clicking on the active user will take the client to the private chat
 * Client can see who is typing and who is present in a conversation
