@@ -70,7 +70,7 @@ Session cookie is required
 - Endpoint: `https://modern-forum-app.redglimmer.repl.co/chat/:chatname`
 ```json
 {
-  "message_id": "id",
+  "message_id": "id"
 }
 ```
 ## Make new chat room
