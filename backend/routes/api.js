@@ -138,7 +138,9 @@ module.exports = function (app) {
             };
 
             const messageSender = chat.messages.find((message) => {
-                return message.sender === req.session.userName && message._id.toString() === message_id;
+                return message.sender === req.session.userName
+                && message._id.toString() === message_id
+                && message.content !== '[DELETED]';
             });
 
             if(!messageSender) {
@@ -158,8 +160,53 @@ module.exports = function (app) {
 
             return res.json(message);
         } catch(err) {
-            console.error('Error occurred in POST request to /message/:chatname', err.message);
-            res.status(500).end('An error occurred while creating new message');
+            console.error('Error occurred in PUT request to /message/:chatname', err.message);
+            res.status(500).end('An error occurred while editing a message');
+        };
+    });
+
+    app.route('/message/:chatname')
+    // Delete a message
+    .delete(auth, async function(req, res) {
+        const name = req.params.chatname;
+        const message_id = req.body.message_id;
+        try {
+            const chat = await Chat.findOne({ name: name });
+
+            if(!chat) {
+                return res.status(404).end('Chat does not exist');
+            };
+
+            if (!chat.users.length === 0 && !chat.users.includes(req.session.userId)) {
+                // Client is trying to access other's private chat
+                return res.status(404).end('Chat does not exist');
+            };
+
+            const messageSender = chat.messages.find((message) => {
+                return message.sender === req.session.userName
+                && message._id.toString() === message_id
+                && message.content !== '[DELETED]';
+            });
+
+            if(!messageSender) {
+                return res.status(404).end('Chat message does not exist');
+            };
+
+            const message = await Chat.findOneAndUpdate(
+                { name: name, 'messages._id': message_id },
+                {
+                  $set: {
+                    'messages.$.content': '[DELETED]',
+                    'messages.$.timestamp': new Date(),
+                  },
+                },
+                { new: true },
+            );
+
+            return res.json(message);
+        } catch(err) {
+            console.error('Error occurred in DELETE request to /message/:chatname', err.message);
+            res.status(500).end('An error occurred while deleting a message');
         };
     });
 
