@@ -117,7 +117,7 @@ s.sockets.on('connect', (socket) => {
         };
       } else {
         socket.broadcast.emit('new-message', message, room);
-      }   
+      }
     });
 
     // Client created new room, tell other clients to update room list

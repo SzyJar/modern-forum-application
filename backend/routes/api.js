@@ -45,6 +45,7 @@ module.exports = function (app) {
                     });
                     await newUser.save();
                     req.session.userId = newUser._id;
+                    req.session.userName = newUser.name;
                     return res.status(201).json({ name: newUser.name, avatar: newUser.avatar });
                 };
             } catch (err) {
@@ -57,6 +58,7 @@ module.exports = function (app) {
                     const isValidPassword = await bcrypt.compareSync(password, user.password);
                     if(isValidPassword) {
                         req.session.userId = user._id;
+                        req.session.userName = user.name;
                         return res.status(200).json({ name: user.name, avatar: user.avatar });
                     };
                     return res.status(401).end('Incorrect password');
@@ -115,6 +117,93 @@ module.exports = function (app) {
             console.error('Error occurred in POST request to /message/:chatname', err.message);
             res.status(500).end('An error occurred while creating new message');
         };
+    })
+    // Edit a message
+    .put(auth, async function(req, res) {
+        const name = req.params.chatname;
+        const message_id = req.body.message_id;
+        const content = req.body.content;
+        try {
+            const chat = await Chat.findOne({ name: name });
+
+            if(!chat) {
+                return res.status(404).end('Chat does not exist');
+            };
+
+            if (!chat.users.length === 0 && !chat.users.includes(req.session.userId)) {
+                // Client is trying to access other's private chat
+                return res.status(404).end('Chat does not exist');
+            };
+
+            const messageSender = chat.messages.find((message) => {
+                return message.sender === req.session.userName
+                && message._id.toString() === message_id
+                && message.content !== '[DELETED]';
+            });
+
+            if(!messageSender) {
+                return res.status(404).end('Chat message does not exist');
+            };
+
+            const message = await Chat.findOneAndUpdate(
+                { name: name, 'messages._id': message_id },
+                {
+                  $set: {
+                    'messages.$.content': content + ' [EDITED]',
+                    'messages.$.timestamp': new Date(),
+                  },
+                },
+                { new: true },
+            );
+
+            return res.json({ message: 'edited'});
+        } catch(err) {
+            console.error('Error occurred in PUT request to /message/:chatname', err.message);
+            return res.status(500).end('An error occurred while editing a message');
+        };
+    })
+    // Delete a message
+    .delete(auth, async function(req, res) {
+        const name = req.params.chatname;
+        const message_id = req.body.message_id;
+        try {
+            const chat = await Chat.findOne({ name: name });
+
+            if(!chat) {
+                return res.status(404).end('Chat does not exist');
+            };
+
+            if (!chat.users.length === 0 && !chat.users.includes(req.session.userId)) {
+                // Client is trying to access other's private chat
+                return res.status(404).end('Chat does not exist');
+            };
+
+            const messageSender = chat.messages.find((message) => {
+                return message.sender === req.session.userName
+                && message._id.toString() === message_id
+                && message.content !== '[DELETED]';
+            });
+
+            if(!messageSender) {
+                return res.status(404).end('Chat message does not exist');
+            };
+
+            const message = await Chat.findOneAndUpdate(
+                { name: name, 'messages._id': message_id },
+                {
+                  $set: {
+                    'messages.$.content': '[DELETED]',
+                    'messages.$.timestamp': new Date(),
+                  },
+                },
+                { new: true },
+            );
+
+            return res.json({ message: 'deleted'});
+        } catch(err) {
+            console.error('Error occurred in DELETE request to /message/:chatname', err.message);
+            return res.status(500).end('An error occurred while deleting a message');
+        };
     });
 
     app.route('/chat')
@@ -136,7 +225,7 @@ module.exports = function (app) {
             return res.json(nameList);
         } catch(err) {
             console.error('Error occurred in GET request to /chat', err.message);
-            res.status(500).end('An error occurred while retrieving chat rooms');
+            return res.status(500).end('An error occurred while retrieving chat rooms');
         };
     });
 
@@ -158,7 +247,7 @@ module.exports = function (app) {
             return res.status(404).end('Chat does not exist');
         } catch(err) {
             console.error('Error occurred in GET request to /chat/:chatname', err.message);
-            res.status(500).end('An error occurred while retrieving messages');
+            return res.status(500).end('An error occurred while retrieving messages');
         };
     })
     // Create new chat
@@ -190,10 +279,10 @@ module.exports = function (app) {
                 return res.status(201).end('created');
             };
     
-            res.status(301).json({ error: 'chat already exist' });
+            return res.status(301).json({ error: 'chat already exist' });
         } catch(err) {
             console.error('Error occurred in POST request to /chat/:chatname', err.message);
-            res.status(500).end('An error occurred while creating new chat');
+            return res.status(500).end('An error occurred while creating new chat');
         };
     });
 
