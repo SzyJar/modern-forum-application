@@ -277,18 +277,18 @@ export default {
     // Handle socket io logic
     s.on('new-message', (message=null, room, sender=null) => {
         // push new message in public chat
-        const foundChat = rooms.value.find(obj => obj.name === room);
-        if (foundChat) {
-            foundChat.message = message.id;
-            foundChat.message = message.content;
-        }
+        // const foundChat = rooms.value.find(obj => obj.name === room);
+        // if (foundChat) {
+        //     foundChat.message = message.id;
+        //     foundChat.message = message.content;
+        // }
 
         if(room === chat.value.name) {
             if(message === null) {
             // if no message reload chat
             // roomChange(chat.value.name);
             } else {
-            chat.value.data.push(message)
+            //chat.value.data.push(message);
             }
         } else {
             // inform user about new private message
@@ -382,68 +382,5 @@ export default {
 }
 </script>
 
-<style>
-@media (max-width: 800px) {
-  body {
-    zoom: 0.7;
-  }
-}
-
-::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
-
-body {
-  background: #e6e6e6;
-  color: #242424;
-  min-width: 750px;
-  min-height: 400px;
-}
-
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-}
-
-.chat-component {
-  transition: margin 0.3s ease;
-}
-
-.sideBar {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background: #323232;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  width: 250px;
-  padding: 20px;
-  transition: transform 0.3s ease;
-}
-
-button {
-  background: #AFAFAF;
-  color: black;
-  border: 1px solid black;
-  border-radius: 10px;
-  min-height: 32px;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #404040;
-  color: #DDD0C8;
-}
-
-h2 {
-  color: white;
-  border-bottom: 1px solid #DDD0C8;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  text-align: center;
-  text-transform: uppercase;
-}
+<style src="@/styles/app.css">
 </style>

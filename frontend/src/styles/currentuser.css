@@ -1,0 +1,34 @@
+img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+.currentUser {
+    background: #AFAFAF;
+    border: 1px solid black;
+    margin-top: -35px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    border-radius: 10px;
+    font-weight: 600;
+    overflow-wrap: break-word;
+}
+
+p {
+    margin: 8px;
+}
+
+.user {
+    background: #AFAFAF;
+}
+
+button {
+    background: crimson;
+}
+
+button:hover {
+    background: #bb1133;
+}

@@ -58,42 +58,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.sideBar {
-    border-right: 1px solid black;
-    left: 0;
-}
+<style scoped src="@/styles/roomlist.css">
 
-.sideBar-hidden {
-  transform: translateX(-260px);
-}
-
-.toggle-button {
-    align-self: flex-end;
-    margin-right: -30px;
-}
-
-.rooms {
-    margin-top: -35px;
-    width: 100%;
-    overflow-y: auto;
-}
-
-.room {
-    background: #AFAFAF;
-    border: 1px solid black;
-    margin-left: 2px;
-    margin-top: 10px;
-    width: 98%;
-    height: 60px;
-    border-radius: 10px;
-    transition: transform 0.1s ease;
-}
-
-.room:hover{
-    background: #404040;
-    color: #DDD0C8;
-    transform: translate(-2px, -2px);
-    cursor: pointer;
-}
 </style>
