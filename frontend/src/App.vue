@@ -155,8 +155,14 @@ export default {
         };
       } else {
         // private chat
-        const users = [currentUser.value.name, data].sort();
-        const chatName = users[0] + '@' + users[1] + '@private';
+        let chatName;
+        let users
+        if (!data.includes('@')) {
+            users = [currentUser.value.name, data].sort();
+            chatName = users[0] + '@' + users[1] + '@private';
+        } else {
+            chatName = data;
+        }
         try {
           const response = await axios.get(process.env.VUE_APP_API_URL
                                           + 'chat/' + chatName )
@@ -165,25 +171,26 @@ export default {
           s.emit('room-change', null);
           inPrivateChat.value = (true);
         } catch(error) {
-        if (error.response && error.response.status === 401) {
-          logOut();
-        } else if (error.response && error.response.status === 404) {
-          // Create new chat room
-          try {
-            const responsePostRoom = await axios.post(process.env.VUE_APP_API_URL + 'chat/'
-                                                      + data, { users: users });
-            const response = await axios.get(process.env.VUE_APP_API_URL
-                                            + 'chat/' + chatName )
-            chat.value.data = response.data;
-            chat.value.name = chatName;
-            s.emit('room-change', null);
-            inPrivateChat.value = (true);
-          } catch (error) {
             console.log(error);
-          };
-        } else {
-          console.log(error);
-        };
+            if (error.response && error.response.status === 401) {
+            logOut();
+            } else if (error.response && error.response.status === 404) {
+            // Create new chat room
+                try {
+                    const responsePostRoom = await axios.post(process.env.VUE_APP_API_URL + 'chat/'
+                                                            + '@', { users: users });
+                    const response = await axios.get(process.env.VUE_APP_API_URL
+                                                    + 'chat/' + chatName )
+                    chat.value.data = response.data;
+                    chat.value.name = chatName;
+                    s.emit('room-change', null);
+                    inPrivateChat.value = (true);
+                } catch (error) {
+                    console.log(error);
+                };
+            } else {
+                console.log(error);
+            };
         }
       }
       // hide notifications
@@ -207,8 +214,8 @@ export default {
         };
 
         let isPrivate=false;
-        //if(chat.value.name.includes('@')) { isPrivate=true }
-        roomChange(chat.value.name, isPrivate); // Need message ID from server for editing
+        if(chat.value.name.includes('@')) { isPrivate=true };
+        roomChange(chat.value.name, isPrivate); // Need message ID from server for editing and deleting requests
     };
 
     // Edit / delete message
@@ -244,9 +251,9 @@ export default {
             }
         }
 
-        if(!chat.value.name.includes('@')) {
-            roomChange(chat.value.name);
-        };
+        let isPrivate=false;
+        if(chat.value.name.includes('@')) { isPrivate=true };
+        roomChange(chat.value.name, isPrivate); // Need message ID from server for editing and deleting requests
     }
 
     // Get all rooms
@@ -282,7 +289,6 @@ export default {
         //     foundChat.message = message.id;
         //     foundChat.message = message.content;
         // }
-
         if(room === chat.value.name) {
             if(message === null) {
             // if no message reload chat
@@ -299,9 +305,9 @@ export default {
             }
         };
 
-        if(!chat.value.name.includes('@')) {
-            roomChange(chat.value.name);
-        };
+        let isPrivate=false;
+        if(chat.value.name.includes('@')) { isPrivate=true };
+        roomChange(chat.value.name, isPrivate); // Need message ID from server for editing and deleting requests
     });
 
     s.on('room-update', () => {
@@ -322,7 +328,6 @@ export default {
           // Remove user after 3 seconds
           setTimeout(() => {
             const indexToRemove = usersTyping.value.indexOf(user);
-            console.log(indexToRemove)
             if (indexToRemove !== -1) {
               usersTyping.value.splice(indexToRemove, 1);
             }

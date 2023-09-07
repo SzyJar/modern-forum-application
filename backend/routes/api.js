@@ -279,7 +279,7 @@ module.exports = function (app) {
                 return res.status(201).end('created');
             };
     
-            return res.status(301).json({ error: 'chat already exist' });
+            return res.status(409).json({ error: 'chat already exist' });
         } catch(err) {
             console.error('Error occurred in POST request to /chat/:chatname', err.message);
             return res.status(500).end('An error occurred while creating new chat');

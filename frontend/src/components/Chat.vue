@@ -8,7 +8,7 @@
                 <img :src="require('../assets/images/profile' + message.avatar + '.jpg')">
                 <div class="sender">{{ new Date(message.timestamp).toLocaleString() }}</div>
             </div>
-            <div v-if="!editing.state || message._id !== editing.id" class="content">{{ message.content }}</div>
+            <div v-if="!editing.state || message._id !== editing.id" class="content" v-html="formatMessage(message.content)"></div>
             <div v-else class="content">
                 <form @submit.prevent="handleEdit">
                     <textarea type="text" v-model="editing.data" :disabled="editing.isLocked" required />
@@ -18,7 +18,7 @@
                 </form>
             </div>
             <div v-if="message.sender === currentUser.name && message.content !== '[DELETED]' && editing.state === false" class="options">
-                <button @click="editMessage(message._id, message.content)"><i class="fa-solid fa-pen"></i></button>
+                <button @click="editMessage(message._id, message.content.replace(/(\s*)\[EDITED\]/g, ''))"><i class="fa-solid fa-pen"></i></button>
                 <button @click="editMessage(message._id, 'MESSAGE WILL BE DELETED!', locked=true)"><i class="fa-solid fa-trash"></i></button>
             </div>
             <div v-if="message.sender === currentUser.name && message.content !== '[DELETED]' && editing.state === true" class="options">
@@ -57,6 +57,22 @@ export default {
             data: '',
             isLocked: false
         });
+
+        const formatMessage = (message) => {
+            const words = message.split(' ');
+
+            if (words.length > 0 && words[words.length - 1] === '[EDITED]') {
+                const status = words.pop();
+                const uneditedText = words.join(' ');
+                return `${uneditedText} <p style="color: #DDD0C8; font-weight: 600;">${status}</p>`;
+            } else if ((words.length > 0 && words[words.length - 1] === '[DELETED]')) {
+                const status = words.pop();
+                const uneditedText = words.join(' ');
+                return `${uneditedText} <span style="color: #DDD0C8; font-weight: 600;">${status}</span>`;
+            }
+
+            return message;
+        };
 
         watch(() => props.chatData, (newValue) => {
             localChatData.value = newValue;
@@ -122,7 +138,8 @@ export default {
             localChatData,
             handleSubmit,
             editMessage,
-            handleEdit
+            handleEdit,
+            formatMessage
         }
     }
 }
