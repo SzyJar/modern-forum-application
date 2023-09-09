@@ -21,7 +21,7 @@
                 <button @click="editMessage(message._id, message.content.replace(/(\s*)\[EDITED\]/g, ''))"><i class="fa-solid fa-pen"></i></button>
                 <button @click="editMessage(message._id, 'MESSAGE WILL BE DELETED!', locked=true)"><i class="fa-solid fa-trash"></i></button>
             </div>
-            <div v-if="message.sender === currentUser.name && message.content !== '[DELETED]' && editing.state === true" class="options">
+            <div v-if="message.sender === currentUser.name && message.content !== '[DELETED]' && editing.state === true && message._id === editing.id" class="options">
                 <button @click="editMessage(message._id)"><i class="fa-solid fa-xmark"></i></button>
             </div>
         </div>
